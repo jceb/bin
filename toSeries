@@ -1,0 +1,9 @@
+#!/bin/sh
+[ $# -lt 2 ] && echo USAGE $(basename $0) PATCHLEVEL FILES
+
+LEVEL=$1
+shift 1
+
+for f in $*; do
+	echo $f ${LEVEL}
+done

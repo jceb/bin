@@ -1,0 +1,93 @@
+#!/bin/sh -e
+
+# queries user for input
+# $1: allow empty input [0|1]
+# $2: query
+# $3: default value
+queryUser ()
+{
+	unset result
+
+	while [ -z "${result}" ]; do
+		result=$3
+		if [ -z "${3}" ]; then
+			read -p "$2: " input
+		else
+			read -p "$2 [$3]: " input
+		fi
+		if [ -z "${input}" -a "${1}" == "1" ]; then
+			echo $input
+			return
+		elif [ -n "${input}" ]; then
+			result=$input
+		fi
+	done
+	echo $result
+}
+
+# $1: exit code
+# $2-*: error message
+failError ()
+{
+	exitcode=$1
+	shift 1
+	echo "ERROR: $*" 1>&2
+	exit $exitcode
+}
+
+REMOTE_REPO=trunk
+
+##### Start execution
+
+[ $# -lt 1 ] && echo USAGE: $(basename $0) REVISION && exit 1
+
+rev=$1
+#root_svnpath=$(sed -ne '6p' .svn/entries)
+#log_msg=$(mktemp || failError 1 "Unable to create temporary file.")
+#svn log -r "$rev" "${root_svnpath}" | sed -e '1,2d;$d;/^[\t ]*$/d' > $log_msg || failError 1 "Command failed."
+#trunk_svnpath=$(svnpath || failError 1 "Command failed.")
+branch=$(queryUser 0 "Please enter the name of the desired branch" "ucs-2.1")
+branchdir=$(echo $(pwd)|sed -e "s#/trunk/#/branches/$branch/#")
+
+test -d "$(dirname ${branchdir})" || failError 1 "Directory does not exist: $branchdir"
+
+echo INFO: cd $(dirname $branchdir)
+cd $(dirname $branchdir)
+echo INFO: Updating remote repository $REMOTE_REPO:
+git-fetch $REMOTE_REPO
+git svn rebase
+#svn up "$(basename $branchdir)" || failError 1 "Command failed."
+#git log --pretty=format:%s%n%b ${rev}~..${rev}|cat
+
+if [ $? -ne 0 ]; then
+	echo "ERROR: git fetch failed with error code \"$?\""
+	echo "INFO: Please continue manually:"
+	echo "git-fetch $REMOTE_REPO"
+	echo "git-cherry-pick -e $rev"
+	#echo "svn ci -F \"$log_msg\""
+	exit 1
+fi
+git-cherry-pick -e $rev
+git svn dcommit
+exit 0
+
+if test -d "$(basename $branchdir)"; then
+	echo INFO: Merging changes:
+	svn merge -c $rev "$trunk_svnpath" "$(basename $branchdir)" || failError 1 "Command failed."
+else
+	copy=$(queryUser 0 "The directory '$(basename $branchdir)' does not exist. Perform svn copy?" "Y")
+	if [ "${copy}" = "y" -o "${copy}" = "Y" ]; then
+		svn copy -r $rev "$trunk_svnpath" "$(basename $branchdir)"
+	else
+		echo "INFO: Please continue manually:"
+		echo "svn copy -r $rev $trunk_svnpath $(basename $branchdir)"
+		echo "svn ci -F \"$log_msg\""
+		exit 1
+	fi
+fi
+
+echo INFO: Commiting changes with the following log message:
+cat "${log_msg}"
+svn ci -F "$log_msg" || failError 1 "Command failed."
+
+rm $log_msg

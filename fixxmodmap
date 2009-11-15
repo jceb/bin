@@ -1,0 +1,23 @@
+#!/bin/sh
+#
+
+xmodmap -e "add shift = Shift_L"
+xmodmap -e "add shift = Shift_R"
+
+xmodmap -e "add lock = Caps_Lock"
+
+xmodmap -e "add control = Control_L"
+xmodmap -e "add control = Control_R"
+
+xmodmap -e "add mod1 = Alt_L"
+xmodmap -e "add mod1 = Meta_L"
+
+xmodmap -e "add mod2 = Num_Lock"
+
+xmodmap -e "add mod4 = Super_L"
+xmodmap -e "add mod4 = Hyper_L"
+
+xmodmap -e "add mod5 = Mode_switch"
+xmodmap -e "add mod5 = ISO_Level3_Shift"
+setxkbmap -option compose:caps,altwin:super_win
+xset r rate 400 30

@@ -1,0 +1,321 @@
+#!/bin/sh
+
+# This script retrieves, guesses and queries the user for several parameters
+# needed to import and build packages with repo-ng. Finally a command line is
+# put together that can be executed on the build host remotely.
+info="This script retrieves, guesses and queries the user for several parameters
+needed to import and build packages with repo-ng. Finally a command line is
+put together that can be executed on the build host remotely."
+
+#TODO: add import of package into a new scope
+
+#DONE: guess scopen when call within a component directory - 2009-06-05 18:14
+#DONE: rebuild from patches directory - 2009-04-25 22:35
+#DONE: find out build program - 2009-04-25 21:40
+#DONE: move certain functionality into methods - 2009-04-25 21:40
+#DONE: add sanity checks: is there a debian directory ... - 2009-02-15 18:06
+#DONE: add scope when called from within a customer directory - 2009-02-15 18:04
+
+# Colors
+
+BLACK="\033[0;30m"
+RED="\033[0;31m"
+GREEN="\033[0;32m"
+BROWN="\033[0;33m"
+BLUE="\033[0;34m"
+PURPLE="\033[0;35m"
+CYAN="\033[0;36m"
+LIGHTGRAY="\033[0;37m"
+
+DARKGRAY="\033[1;30m"
+LIGHTRED="\033[1;31m"
+LIGHTGREEN="\033[1;32m"
+YELLOW="\033[1;33m"
+LIGHTBLUE="\033[1;34m"
+LIGHTPURPLE="\033[1;35m"
+LIGHTCYAN="\033[1;36m"
+WHITE="\033[1;37m"
+
+BG_BLACK="\033[40m"
+BG_RED="\033[41m"
+BG_GREEN="\033[42m"
+BG_BROWN="\033[43m"
+BG_BLUE="\033[44m"
+BG_PURPLE="\033[45m"
+BG_CYAN="\033[46m"
+BG_LIGHTGRAY="\033[47m"
+
+# queries user for input
+# $1: allow empty input [0|1]
+# $2: query
+# $3: default value
+queryUser ()
+{
+	unset result
+
+	while [ -z "${result}" ]; do
+		result=$3
+		if [ -z "${3}" ]; then
+			read -p "$2: " input
+		else
+			read -p "$2 [$3]: " input
+		fi
+		if [ -z "${input}" -a "${1}" == "1" ]; then
+			echo $input
+			return
+		elif [ -n "${input}" ]; then
+			result=$input
+		fi
+	done
+	echo $result
+}
+
+# $1: exit code
+# $2-...: error message
+failError ()
+{
+	exitcode=$1
+	shift 1
+	log 3 $*
+	exit $exitcode
+}
+
+log ()
+{
+	type=$1
+	shift
+	case $type in
+		1)
+		type=${GREEN}INFO:${BLACK}
+		;;
+		2)
+		type=${YELLOW}WARNING:${BLACK}
+		;;
+		3)
+		type=${RED}ERROR:${BLACK}
+		;;
+		*)
+		;;
+	esac
+	echo -e "$type ${*}" 1>&2
+}
+
+get_scope ()
+{
+	wd=$1
+	if $(echo $wd | grep -q \/trunk\/internal\/); then
+		log 1 "using scope \"${BLUE}internal${BLACK}\" instead of \"$default_scope\""
+		scope=internal
+	elif $(echo $wd | grep -q \/trunk\/); then
+		if [ -n "${default_trunk_scope}" ]; then
+			log 2 "commiting in trunk - using trunk scope \"${BLUE}$default_trunk_scope${BLACK}\" instead of \"$default_scope\""
+			scope=$default_trunk_scope
+		else
+			log 2 "you are not in the directory trunk/internal but you tried to import and build a package!\n"
+			log 3 "This is definitively not allowed - merge your changes and switch to a branch."
+			exit 1
+		fi
+	elif $(echo $wd | grep -q \/customers\/); then
+		scope=$(echo $wd|sed -e 's#^.*/customers/[0-9]\{4\}_\([^/]*\)/.*#\1#')
+		log 1 "using scope \"${BLUE}$scope${BLACK}\" instead of \"$default_scope\""
+	elif $(echo $wd | grep -q \/patches\/); then
+		scope=$(basename $wd|sed -ne 's#.*-\([a-z]\{3,\}.*\)$#\1#p')
+		log 1 "guessing scope \"${BLUE}$scope${BLACK}\" - please verify"
+	elif $(echo $wd | grep -q \/component\/); then
+		scope=$(echo $wd|sed -ne 's#.*/component/\([^/]*\)/.*$#\1#p')
+		log 1 "guessing scope \"${BLUE}$scope${BLACK}\" - please verify"
+	else
+		r=$(echo $PWD | sed -e 's#^.*/branches\/ucs-\([^/]*\).*$#\1#')
+		scope=ucs${r}-0
+	fi
+	echo $scope
+}
+
+get_path ()
+{
+	wd=$1
+	if $(echo $wd | grep -q \/trunk\/internal); then
+		path=$(echo $PWD | sed -e 's#^.*/\(trunk.*\)$#\1#')
+	elif $(echo $wd | grep -q \/trunk\/); then
+		if [ -n "${default_trunk_scope}" ]; then
+			path=$(echo $wd | sed -e 's#^.*/\(trunk.*\)$#\1#')
+		else
+			log 2 "you are not in the directory trunk/internal but you tried to import and build a package!\n"
+			log 3 "This is definitively not allowed - merge your changes and switch to a branch."
+			exit 1
+		fi
+	elif $(echo $wd | grep -q \/patches\/); then
+		# only a build is possible
+		path=
+	else
+		path=$(echo $PWD | sed -e 's#^.*/\(branches.*\)$#\1#')
+	fi
+	echo $path
+}
+
+get_build_program ()
+{
+	wd=$1
+	if $(echo $wd | grep -q \/trunk\/internal); then
+		build_program=$default_build_program
+	elif $(echo $wd | grep -q \/trunk\/); then
+		if [ -n "${default_trunk_scope}" ]; then
+			build_program=$default_build_program
+		else
+			log 2 "you are not in the directory trunk/internal but you tried to import and build a package!\n"
+			log 3 "This is definitively not allowed - merge your changes and switch to a branch."
+			exit 1
+		fi
+	else
+		if $(echo $wd | grep -q \/patches\/); then
+			r=$(basename $(dirname $wd)|sed -e 's/-.*$//')
+		else
+			r=$(echo $PWD | sed -e 's#^.*/branches\/ucs-\([^/]*\).*$#\1#')
+		fi
+		r=$(echo $r|sed -e 's/^1\.[0-9.]*$//')
+		r=$(echo $r|sed -e 's/\.0$//')
+		r=$(echo $r|sed -e 's/\.//')
+		build_program=b${r}-scope
+	fi
+	echo $build_program
+}
+
+get_revision ()
+{
+	wd=$1
+	if $(echo $wd | grep -q \/trunk\/internal); then
+		revision=$default_revision
+	elif $(echo $wd | grep -q \/trunk\/); then
+		if [ -n "${default_trunk_scope}" ]; then
+			revision=$default_revision
+		else
+			log 2 "you are not in the directory trunk/internal but you tried to import and build a package!\n"
+			log 3 "This is definitively not allowed - merge your changes and switch to a branch."
+			exit 1
+		fi
+	elif $(echo $wd | grep -q \/patches\/); then
+		revision=$(basename $(dirname $wd)|sed -e 's/-ucs$//')
+	else
+		r=$(echo $PWD | sed -e 's#^.*/branches\/ucs-\([^/]*\).*$#\1#')
+		case $r in
+			1.3)
+			revision=1.3-2-0
+			;;
+			*)
+			revision=${r}-0-0
+			;;
+		esac
+	fi
+	echo $revision
+}
+
+get_package ()
+{
+	wd=$1
+	if $(echo $wd | grep -q \/patches\/); then
+		package=$(basename $(dirname $(dirname $wd)))
+	else
+		package=$(basename $PWD)
+	fi
+	echo $package
+}
+
+##### Start execution
+buildhost=omar
+default_revision=2.2-0-0
+default_scope=ucs2.2-0
+#default_trunk_scope=sfb-experimental-ucs2.2-0
+default_build_program=b22-scope
+case $1 in
+	-i)
+	import=1
+	;;
+	-b) 
+	build=1
+	;;
+	-h|--help) 
+	echo "USAGE: $(basename $0) [-i|-b]"
+	echo -e "\t-i Perform only an import"
+	echo -e "\t-b Perform only a build"
+	echo -e "\tBy default import and build are done."
+	echo
+	echo $info
+	exit 0
+	;;
+	*)
+	import=1
+	build=1
+esac
+
+if [ ! -d debian ]; then
+	if $(echo $PWD|egrep -q '\/patches\/'); then
+		if [ $(basename $(dirname $(dirname $(dirname $PWD)))) != "patches" ]; then
+			log 3 "You are not in a patches directory - you don't want to do the build here, don't you?"
+			exit 1
+		else
+			# overwrite any prior definitions - only build makes sense for
+			# patches directories
+			log 1 "From patches directories it only makes sense to build packages - disabling import."
+			import=
+			build=1
+		fi
+	else
+		log 3 "There is no debian sub-directory - you don't want to do the import here, don't you?"
+		exit 1
+	fi
+fi
+
+# get scope
+scope=$(get_scope $PWD)
+[ $? -ne 0 ] && exit 1
+if test -z "${scope}"; then
+	scope=$(queryUser 1 "Scope" $scope)
+else
+	scope=$(queryUser 0 "Scope" $scope)
+	# FIXME: allow the empty string although it's not allowed by queryUser - ugly hack
+	[ "${scope}" = '""' -o "${scope}" = "''" ] && scope=
+fi
+
+# get SVN path
+path=$(get_path $PWD)
+
+# get build program
+build_program=$(get_build_program $PWD)
+if [ -z "${scope}" ]; then
+	build_program=$(echo $build_program|sed -e 's/-scope$//')
+fi
+build_program=$(queryUser 0 "Build program" $build_program)
+
+# get revision
+revision=$(get_revision $PWD)
+revision=$(queryUser 0 "Revision" $revision)
+
+# get package name
+package=$(get_package $PWD)
+
+# build the final command
+cmd=
+if test -n "$import"; then
+	if test -z "${scope}"; then
+		cmd="repo_admin.py -S -p $package -P $path -r $revision"
+	else
+		cmd="repo_admin.py -S -p $package -P $path -s $scope -r $revision"
+	fi
+fi
+
+if test -n "$build"; then
+	c="$build_program $scope $package"
+	if test -n "$import"; then
+		cmd="$cmd && $c"
+	else
+		cmd="$c"
+	fi
+fi
+
+# execute the build/import command
+log 1 "executing the following commands:"
+echo ssh "${buildhost}" "$cmd"
+if [ "$(queryUser 0 "Is this what you desire?" "y")" = "y" ]; then
+	ssh "${buildhost}" "$cmd"
+	xmessage -center "Package build complete: ${package}"
+fi
