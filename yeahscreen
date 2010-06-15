@@ -1,0 +1,7 @@
+#!/bin/sh
+if test $(screen -list | grep -c yeah) -ge 1
+then
+   yeahconsole -e screen -U -x -S yeah -R &
+else
+   yeahconsole -e screen -U -S yeah -R &
+fi

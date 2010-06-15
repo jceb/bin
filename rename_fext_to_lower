@@ -1,0 +1,19 @@
+#!/bin/sh
+# mvtest.sh -- changes filextensions to lowercase
+# @Author       : Jan Christoph Ebersbach (jceb@tzi.de)
+# @License      : GPL (see http://www.gnu.org/licenses/gpl.txt)
+# @Created      : 2006-12-01
+# @Last Modified: Fri 01. Dec 2006 18:45:43 +0800 CST
+# @Revision     : 0.0
+# @vi           : ft=sh:tw=80:sw=4:ts=8
+# 
+# @Description  :
+# @Usage        :
+# @TODO         : do not use this script with filenames containing "
+# @CHANGES      :
+
+while [ $# -ge 1 ]
+do
+    echo $1 | sed -ne "s/\(.*\)/\"\1\"/;h;s/\(\.[a-zA-Z0-9]\{1,\}\"\)$/\L\1/;x;p;x;p" | xargs -r -n 2 mv -iv
+    shift 1
+done
