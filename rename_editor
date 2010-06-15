@@ -1,0 +1,41 @@
+#!/bin/sh
+# renameeditor.sh -- rename a bunch of files in your favorite editor
+# @Author       : Jan Christoph Ebersbach (jceb@tzi.de)
+# @License      : GPL (see http://www.gnu.org/licenses/gpl.txt)
+# @Created      : 2007-03-14
+# @Last Modified: Thu 15. Mar 2007 08:13:51 +0100 CET
+# @Revision     : 0.0
+# @vi           : ft=sh:tw=80:sw=4:ts=4
+# 
+# @Description  :
+# @Usage        : If you want to cancel the renaming, remove all content from
+#                 the file
+# @Bugs         : You cann't rename files that contain a newline character
+# @TODO         :
+# @CHANGES      :
+
+AWK=$(which gawk)
+# if you haven't specified something real, you have to live with this one ;)
+EDITOR=${EDITOR:?vi}
+
+DELIMITER="	::>	"
+
+if [ -z "{AWK}" ]
+then
+    echo Unable to find gawk 1>&2
+fi
+    
+TMP_FILE=$(mktemp) || (echo Unable to create temporary file 1>&2 && exit 1)
+
+while [ $# -gt 0 ]
+do
+    echo "${1}${DELIMITER}${1}" >> "${TMP_FILE}"
+    shift 1
+done
+
+"${EDITOR}" "${TMP_FILE}"
+
+# mv is not able to ask the user to overwrite a file - this is not good, find something better
+"${AWK}" -F"${DELIMITER}" '{ mv="xargs -0 mv -v --backup --"; printf("%s\x0%s\x0", $1, $2) | mv; close(mv) }' "${TMP_FILE}"
+
+rm "${TMP_FILE}"
