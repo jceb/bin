@@ -1,0 +1,37 @@
+#!/bin/sh
+
+#.!for i in s n r v m p i o; do echo $i="$(/bin/uname.old -$i)"; done
+
+s="Linux"
+n="qamaster"
+r="2.6.18-ucs85-686"
+v="#1 SMP Fri Jun 27 07:56:41 UTC 2008"
+m="i686"
+p="unknown"
+i="unknown"
+o="GNU/Linux"
+
+a="$s $n $r $v $m $o"
+
+case $1 in
+	-a) echo $a
+	break;;
+	-s) echo $s
+	break;;
+	-n) echo $n
+	break;;
+	-r) echo $r
+	break;;
+	-v) echo $v
+	break;;
+	-m) echo $m
+	break;;
+	-p) echo $p
+	break;;
+	-i) echo $i
+	break;;
+	-o) echo $o
+	break;;
+	*) echo $s
+	break;;
+esac
