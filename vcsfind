@@ -1,4 +1,4 @@
 #!/bin/sh
 dir=$1
 [ -z "${dir}" ] && dir=. || shift
-find "$dir" -not -wholename '*/.bzr*' -a -not -wholename '*/.hg*' -a -not -wholename '*/.git*' -a -not -wholename '*/.svn*' -a -not -wholename '*/CVS*' $*
+find "$dir" -not -wholename '*/.bzr*' -a -not -wholename '*/.hg*' -a -not -wholename '*/.git*' -a -not -wholename '*/.svn*' -a -not -wholename '*/CVS*' "$@"
