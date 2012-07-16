@@ -3,7 +3,7 @@
 # @Author       : Jan Christoph Ebersbach (jceb@tzi.de)
 # @License      : GPL (see http://www.gnu.org/licenses/gpl.txt)
 # @Created      : 2007-03-14
-# @Last Modified: Thu 15. Mar 2007 08:13:51 +0100 CET
+# @Last Modified: Thu 02. Dec 2010 15:34:59 +0100 CET
 # @Revision     : 0.0
 # @vi           : ft=sh:tw=80:sw=4:ts=4
 # 
@@ -36,6 +36,7 @@ done
 "${EDITOR}" "${TMP_FILE}"
 
 # mv is not able to ask the user to overwrite a file - this is not good, find something better
-"${AWK}" -F"${DELIMITER}" '{ mv="xargs -0 mv -v --backup --"; printf("%s\x0%s\x0", $1, $2) | mv; close(mv) }' "${TMP_FILE}"
+#"${AWK}" -F"${DELIMITER}" '{ mv="xargs -0 mv -v --backup --"; printf("%s\x0%s\x0", $1, $2) | mv; close(mv) }' "${TMP_FILE}"
+"${AWK}" -F"${DELIMITER}" '{ mv="xargs -0 -n 2 svn mv"; printf("%s\x0%s\x0", $1, $2) | mv; close(mv) }' "${TMP_FILE}"
 
 rm "${TMP_FILE}"
