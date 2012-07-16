@@ -1,4 +1,3 @@
 #!/bin/sh
-# add directory to font path and reload cache
-find $HOME/.fonts/ -name fonts.scale -printf '%h\n' | xargs -n 1 -I FONT xset fp+ FONT
+find $HOME/.fonts/ -type d -print0 | xargs -0 -n 1 xset +fp
 xset fp rehash
