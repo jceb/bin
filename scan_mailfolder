@@ -1,15 +1,19 @@
 #!/bin/sh
-MAILDIR=~/Documents/Data/backup/Mail/
+if [ $# -ge 1 ]; then
+	MAILDIR="$1"
+else
+	MAILDIR=~/Documents/Data/backup/Mail/
+fi
 
-cd $MAILDIR
+cd "$MAILDIR"
 
 #echo -n "+ "
 
-for file in $(find . -type d)
+find . -type d | while read file
 do
     #box=$(basename "$file")
     box="$file"
-    if [ -d $file/new  -a -d $file/cur -a -d $file/tmp ]
+    if [[ -d "$file/new" ]] && [[ -d "$file/cur" ]] && [[ -d "$file/tmp" ]]
     then
         echo -n "\"+${box:2:${#box}}\" "
     fi
