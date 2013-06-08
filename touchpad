@@ -3,14 +3,9 @@ synclient \
     VertEdgeScroll=1 \
     HorizEdgeScroll=0 \
     CornerCoasting=1 \
-    VertTwoFingerScroll=0 \
+    VertTwoFingerScroll=1 \
     HorizTwoFingerScroll=1 \
-    UpDownScrolling=1 \
-    LeftRightScrolling=1 \
-    UpDownScrollRepeat=1 \
-    LeftRightScrollRepeat=1 \
     TouchpadOff=0 \
-    GuestMouseOff=0 \
     TapButton1=1 \
     TapButton2=2 \
     TapButton3=3 \
