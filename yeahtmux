@@ -3,5 +3,5 @@
 if $(tmux has-session -t yeah); then
 	yeahconsole -e tmux attach-session -t yeah
 else
-	yeahconsole -e tmux new-session -s yeah
+	yeahconsole -e tmux new-session -s yeah -n offlineimap offlineimap
 fi
