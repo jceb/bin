@@ -11,6 +11,8 @@ synclient \
     TapButton3=3 \
     ClickFinger1=1 \
     ClickFinger2=1 \
-    ClickFinger3=2
+    ClickFinger3=2 \
+    PalmDetect=1 \
+    MaxTapMove=530
 
 xsetroot -cursor_name left_ptr
