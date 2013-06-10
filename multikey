@@ -8,4 +8,5 @@
 #setxkbmap -option compose:caps -model pc104 -layout us,de -variant ,
 setxkbmap -option compose:caps
 xmodmap -e 'keycode 135 = Super_L'
+
 xset r rate 350 30

@@ -36,7 +36,7 @@ done
 "${EDITOR}" "${TMP_FILE}"
 
 # mv is not able to ask the user to overwrite a file - this is not good, find something better
-#"${AWK}" -F"${DELIMITER}" '{ mv="xargs -0 mv -v --backup --"; printf("%s\x0%s\x0", $1, $2) | mv; close(mv) }' "${TMP_FILE}"
-"${AWK}" -F"${DELIMITER}" '{ mv="xargs -0 -n 2 svn mv"; printf("%s\x0%s\x0", $1, $2) | mv; close(mv) }' "${TMP_FILE}"
+"${AWK}" -F"${DELIMITER}" '{ mv="xargs -0 mv -v --backup --"; printf("%s\x0%s\x0", $1, $2) | mv; close(mv) }' "${TMP_FILE}"
+# "${AWK}" -F"${DELIMITER}" '{ mv="xargs -0 -n 2 svn mv"; printf("%s\x0%s\x0", $1, $2) | mv; close(mv) }' "${TMP_FILE}"
 
 rm "${TMP_FILE}"
