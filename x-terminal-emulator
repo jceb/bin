@@ -1,2 +1,10 @@
 #!/bin/sh
-urxvt -e tmux new-session
+first_session="$(tmux list-sessions | sed -n -e '1s/:.*//p')"
+first_detached_session="$(tmux list-sessions | grep -v '(attached)$' | sed -n -e '1s/:.*//p')"
+if [ -z "${@}" ] && [ -n "${first_detached_session}" ] ; then
+	urxvt -e tmux attach-session -t "${first_detached_session}"
+elif [ -z "${@}" ] && [ -n "${first_session}" ] ; then
+	urxvt -e tmux attach-session -t "${first_session}"
+else
+	urxvt -e tmux new-session "$@"
+fi
