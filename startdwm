@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 # dwm startup script
 
 # extend the PATH variable with ~/bin
