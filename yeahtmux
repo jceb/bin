@@ -3,7 +3,8 @@
 if $(tmux has-session -t yeah); then
 	yeahconsole -e tmux attach-session -t yeah
 else
-	tmux new-session -d -s yeah -n imap "offlineimap; ${SHELL}"
+	tmux new-session -d -s yeah
+	# tmux new-session -d -s yeah -n imap offlineimap
 	# tmux new-window -n irc weechat-curses
 	yeahtmux
 fi
