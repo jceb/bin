@@ -2,7 +2,43 @@
 # Script for integrating vim and tmux
 # Author: Jan Christoph Ebersbach <jceb@e-jc.de>
 # Last Modified: Thu 09. Jan 2014 17:23:11 +0100 CET
+
+# Help:
+# -i interactive selection of a vim server
+# -n create a new vim server despite any existing servers
+# -N create a new vim server despite any existing servers but don't create session variables
+#
+# Related Commands:
+# v and vim, open a file in an existing server or creates a new server if there is none
+# vv, create a new vim server despite any existing servers
+# vvv, interactive server name seletion for a new vim server
+
+# TODO test existence of vim server names and remove them if they don't exist anymore
+
 set -e
+
+interactive=
+newsession=
+newsession_no_vars=
+while getopts "inNh" option; do
+	case $option in
+		i) interactive="1"
+			;;
+		n) newsession="1"
+			;;
+		N) newsession_no_vars="1"
+			;;
+		h) echo "$(basename "$0") (-i|-n|-N|-h)"
+			echo "\t-i interactive selection of a vim server"
+			echo "\t-n create a new vim server despite any existing servers"
+			echo "\t-N create a new vim server despite any existing servers but don't create session variables"
+			exit
+			;;
+		*) echo "Unknown argument ${option}" 1>&2
+			exit 1
+			;;
+	esac
+done
 
 create_session_variables () {
 	local tsession server
@@ -15,14 +51,17 @@ create_session_variables () {
 	tmux set-environment "VMUX_SESSION_${tsession}" "${server}"
 }
 
-if [ "${1}" = '-i' ]; then
+if [ -n "${interactive}" ]; then
 	server="$(vim --serverlist | dmenu)"
 else
 	server="$(echo "$(basename $(dirname "$PWD"))_$(basename "$PWD")" | sed -e 's#/#_#g')"
 	if [ -n "${TMUX}" ]; then
 		tsession=$(tmux display-message -p '#S')
 		local_vmux_session="$(eval "\${VMUX_SESSION_${tsession}}")"
-		if [ "${1}" = '-n' ]; then
+		if [ -n "${newsession_no_vars}" ]; then
+			# don't create session variables
+			: pass
+		elif [ -n "${newsession}" ]; then
 			create_session_variables "${tsession}" "${server}"
 		elif [ -n "${local_vmux_session}" ]; then
 			server="${local_vmux_session}"
