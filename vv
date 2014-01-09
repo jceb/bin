@@ -3,11 +3,11 @@
 # Author: Jan Christoph Ebersbach <jceb@e-jc.de>
 # Last Modified: Mon 10. Jun 2013 15:56:21 +0200 CEST
 set -e
-server="$(vim --serverlist | dmenu || true)"
+server="$(vsession -n)"
 if [ -n "${server}" ]; then
 	vim=gvim
 	if [ -n "${TERM}" ] && [ "${TERM}" != "dumb" ]; then
 		vim=vim
 	fi
-	"${vim}" --servername "${server}" --remote "$@"
+	/usr/bin/"${vim}" --servername "${server}" --remote-silent "$@"
 fi

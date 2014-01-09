@@ -1,0 +1,36 @@
+#!/bin/sh
+# Script for integrating vim and tmux
+# Author: Jan Christoph Ebersbach <jceb@e-jc.de>
+# Last Modified: Thu 09. Jan 2014 17:23:11 +0100 CET
+set -e
+
+create_session_variables () {
+	local tsession server
+	tsession="${1}"
+	server="${2}"
+	if [ -z "${VMUX_SESSION}" ]; then
+		export VMUX_SESSION="${server}"
+		tmux set-environment -g VMUX_SESSION "${server}"
+	fi
+	tmux set-environment "VMUX_SESSION_${tsession}" "${server}"
+}
+
+if [ "${1}" = '-i' ]; then
+	server="$(vim --serverlist | dmenu)"
+else
+	server="$(echo "$(basename $(dirname "$PWD"))_$(basename "$PWD")" | sed -e 's#/#_#g')"
+	if [ -n "${TMUX}" ]; then
+		tsession=$(tmux display-message -p '#S')
+		local_vmux_session="$(eval "\${VMUX_SESSION_${tsession}}")"
+		if [ "${1}" = '-n' ]; then
+			create_session_variables "${tsession}" "${server}"
+		elif [ -n "${local_vmux_session}" ]; then
+			server="${local_vmux_session}"
+		elif [ -n "${VMUX_SESSION}" ]; then
+			server="${VMUX_SESSION}"
+		else
+			create_session_variables "${tsession}" "${server}"
+		fi
+	fi
+fi
+echo "${server}"
