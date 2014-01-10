@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 # Script for integrating vim and tmux
 # Author: Jan Christoph Ebersbach <jceb@e-jc.de>
 # Last Modified: Thu 09. Jan 2014 17:23:11 +0100 CET
@@ -40,6 +40,30 @@ while getopts "inNh" option; do
 	esac
 done
 
+remove_session_if_not_existent () {
+	local servers session sessionvar found global
+	session="$1"
+	sessionvar="$2"
+	global="$3"
+	if [ -n "${session}" ]; then
+		servers=( $(/usr/bin/vim --serverlist) )
+		found=
+		for s in "$servers[@]"; do
+			if [ "$(echo "${session}"|tr '[:lower:]' '[:upper:]')" = "${s}" ]; then
+				found=1
+				break
+			fi
+		done
+		if [ -z "${found}" ]; then
+			if [ -n "${global}" ]; then
+				tmux set-environment -g -u "${sessionvar}"
+			fi
+			tmux set-environment -u "${sessionvar}"
+			eval "unset '${session}'"
+		fi
+	fi
+}
+
 create_session_variables () {
 	local tsession server
 	tsession="${1}"
@@ -52,12 +76,17 @@ create_session_variables () {
 }
 
 if [ -n "${interactive}" ]; then
-	server="$(vim --serverlist | dmenu)"
+	server="$(/usr/bin/vim --serverlist | dmenu)"
 else
-	server="$(echo "$(basename $(dirname "$PWD"))_$(basename "$PWD")" | sed -e 's#/#_#g')"
+	server="$(echo "$(basename $(dirname "$PWD"))_$(basename "$PWD")" | sed -e 's#[^a-zA-Z0-9_]##g')"
 	if [ -n "${TMUX}" ]; then
 		tsession=$(tmux display-message -p '#S')
-		local_vmux_session="$(eval "\${VMUX_SESSION_${tsession}}")"
+		server="${server}_${tsession}"
+		local_vmux_session="$(eval "echo \"\${VMUX_SESSION_${tsession}}\"")"
+
+		remove_session_if_not_existent "${local_vmux_session}" "VMUX_SESSION_${tsession}" ''
+		remove_session_if_not_existent "${VMUX_SESSION}" 'VMUX_SESSION' '1'
+
 		if [ -n "${newsession_no_vars}" ]; then
 			# don't create session variables
 			: pass
