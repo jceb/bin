@@ -59,9 +59,10 @@ remove_session_if_not_existent () {
 				tmux set-environment -g -u "${sessionvar}"
 			fi
 			tmux set-environment -u "${sessionvar}"
-			eval "unset '${session}'"
+			return 0
 		fi
 	fi
+	return 1
 }
 
 create_session_variables () {
@@ -78,14 +79,14 @@ create_session_variables () {
 if [ -n "${interactive}" ]; then
 	server="$(/usr/bin/vim --serverlist | dmenu)"
 else
-	server="$(echo "$(basename $(dirname "$PWD"))_$(basename "$PWD")" | sed -e 's#[^a-zA-Z0-9_]##g')"
+	server="v_$(echo "$(basename $(dirname "$PWD"))_$(basename "$PWD")" | sed -e 's#[^a-zA-Z0-9_-]##g')"
 	if [ -n "${TMUX}" ]; then
 		tsession=$(tmux display-message -p '#S')
 		server="${server}_${tsession}"
 		local_vmux_session="$(eval "echo \"\${VMUX_SESSION_${tsession}}\"")"
 
-		remove_session_if_not_existent "${local_vmux_session}" "VMUX_SESSION_${tsession}" ''
-		remove_session_if_not_existent "${VMUX_SESSION}" 'VMUX_SESSION' '1'
+		remove_session_if_not_existent "${local_vmux_session}" "VMUX_SESSION_${tsession}" '' && eval "unset 'VMUX_SESSION_${tsession}'" || true
+		remove_session_if_not_existent "${VMUX_SESSION}" 'VMUX_SESSION' '1' && unset 'VMUX_SESSION' || true
 
 		if [ -n "${newsession_no_vars}" ]; then
 			# don't create session variables
