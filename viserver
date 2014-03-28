@@ -1,0 +1,20 @@
+#!/bin/sh
+# open files in a vim server
+
+# enforce editor to make it work better with tmux and ranger
+EDITOR="${REALEDITOR:=/usr/bin/vim}"
+
+# strip file separator to prevent it from being interpreted as a file
+if [ "$1" == "--" ]; then
+	shift
+fi
+
+if [ "$1" = '--help' ] || [ "$1" = '-h' ]; then
+	"${EDITOR}" "$@"
+elif [ "$1" = "-" ]; then
+	"${EDITOR}" --servername "$(vsession)" "$@"
+elif [ $# -ge 1 ]; then
+	"${EDITOR}" --servername "$(vsession)" --remote-silent "$@"
+else
+	"${EDITOR}" --servername "$(vsession)"
+fi
