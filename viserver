@@ -1,14 +1,13 @@
 #!/bin/sh
 # open files in a vim server
 
-set -u
 set -e
 
 # enforce editor to make it work better with tmux and ranger
 EDITOR="${REALEDITOR:=/usr/bin/vim}"
 
 # strip file separator to prevent it from being interpreted as a file
-if [ "${1:=}" = "--" ]; then
+if [ "${1}" = "--" ]; then
 	shift
 fi
 
