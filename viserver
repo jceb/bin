@@ -12,11 +12,11 @@ if [ "${1}" = "--" ]; then
 fi
 
 if [ "$1" = '--help' ] || [ "$1" = '-h' ]; then
-	"${EDITOR}" "$@"
+	exec "${EDITOR}" "$@"
 elif [ "$1" = "-" ]; then
-	"${EDITOR}" --servername "$(vsession)" "$@"
+	exec "${EDITOR}" --servername "$(vsession)" "$@"
 elif [ $# -ge 1 ]; then
-	"${EDITOR}" --servername "$(vsession)" --remote-silent "$@"
+	exec "${EDITOR}" --servername "$(vsession)" --remote-silent "$@"
 else
-	"${EDITOR}" --servername "$(vsession)"
+	exec "${EDITOR}" --servername "$(vsession)"
 fi
