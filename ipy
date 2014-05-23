@@ -1,2 +1,2 @@
 #!/bin/sh
-exec ipython notebook --matplotlib=inline
+exec ipython3 notebook --matplotlib=inline
