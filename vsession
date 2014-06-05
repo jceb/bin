@@ -69,10 +69,11 @@ create_session_variables () {
 	local tsession server
 	tsession="${1}"
 	server="${2}"
-	if [ -z "${VMUX_SESSION}" ]; then
-		export VMUX_SESSION="${server}"
-		tmux set-environment -g VMUX_SESSION "${server}"
-	fi
+	# disable global vsession
+	# if [ -z "${VMUX_SESSION}" ]; then
+	# 	export VMUX_SESSION="${server}"
+	# 	tmux set-environment -g VMUX_SESSION "${server}"
+	# fi
 	tmux set-environment "VMUX_SESSION_${tsession}" "${server}"
 }
 
@@ -86,7 +87,8 @@ else
 		local_vmux_session="$(eval "echo \"\${VMUX_SESSION_${tsession}}\"")"
 
 		remove_session_if_not_existent "${local_vmux_session}" "VMUX_SESSION_${tsession}" '' && eval "unset 'VMUX_SESSION_${tsession}'" || true
-		remove_session_if_not_existent "${VMUX_SESSION}" 'VMUX_SESSION' '1' && unset 'VMUX_SESSION' || true
+		# disable global vsession
+		# remove_session_if_not_existent "${VMUX_SESSION}" 'VMUX_SESSION' '1' && unset 'VMUX_SESSION' || true
 
 		if [ -n "${newsession_no_vars}" ]; then
 			# don't create session variables
