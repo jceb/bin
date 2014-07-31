@@ -21,7 +21,7 @@ if [ $# -ge 1 ] && [ "${1}" = "--" ]; then
 	shift
 fi
 
-if [ $# -ge 1 ] && ([ "$1" = '--help' ] || [ "$1" = '-h' ]); then
+if [ $# -ge 1 ] && ([ "$1" = '--help' ] || [ "$1" = '-h' ] || [ "$1" = '--serverlist' ]); then
 	exec "${EDITOR}" "$@"
 elif [ $# -ge 1 ] && [ "$1" = "-" ]; then
 	exec "${EDITOR}" --servername "$(vsession "${GLOBAL}")" "$@"
