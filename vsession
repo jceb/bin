@@ -89,27 +89,25 @@ if [ -n "${interactive}" ]; then
 	server="$(/usr/bin/vim --serverlist | dmenu)"
 else
 	server="v_$(echo "$(basename $(dirname "$PWD"))_$(basename "$PWD")" | sed -e 's#[^a-zA-Z0-9_-]##g')"
-	if [ -n "${TMUX}" ]; then
-		tsession=$(tmux display-message -p '#S')
-		server="${server}_${tsession}"
-		local_vmux_session="$(eval "echo \"\${VMUX_SESSION_${tsession}}\"")"
+	tsession=$(tmux display-message -p '#S')
+	server="${server}_${tsession}"
+	local_vmux_session="$(eval "echo \"\${VMUX_SESSION_${tsession}}\"")"
 
-		remove_session_if_not_existent "${local_vmux_session}" "VMUX_SESSION_${tsession}" '' && eval "unset 'VMUX_SESSION_${tsession}'" || true
-		# disable global vsession
-		remove_session_if_not_existent "${VMUX_SESSION}" 'VMUX_SESSION' '1' && unset 'VMUX_SESSION' || true
+	remove_session_if_not_existent "${local_vmux_session}" "VMUX_SESSION_${tsession}" '' && eval "unset 'VMUX_SESSION_${tsession}'" || true
+	# disable global vsession
+	remove_session_if_not_existent "${VMUX_SESSION}" 'VMUX_SESSION' '1' && unset 'VMUX_SESSION' || true
 
-		if [ -n "${newsession_no_vars}" ]; then
-			# don't create session variables
-			: pass
-		elif [ -n "${newsession}" ]; then
-			create_session_variables "${global}" "${tsession}" "${server}"
-		elif [ -n "${local_vmux_session}" ]; then
-			server="${local_vmux_session}"
-		elif [ -n "${VMUX_SESSION}" ]; then
-			server="${VMUX_SESSION}"
-		else
-			create_session_variables "${global}" "${tsession}" "${server}"
-		fi
+	if [ -n "${newsession_no_vars}" ]; then
+		# don't create session variables
+		: pass
+	elif [ -n "${newsession}" ]; then
+		create_session_variables "${global}" "${tsession}" "${server}"
+	elif [ -n "${local_vmux_session}" ]; then
+		server="${local_vmux_session}"
+	elif [ -n "${VMUX_SESSION}" ]; then
+		server="${VMUX_SESSION}"
+	else
+		create_session_variables "${global}" "${tsession}" "${server}"
 	fi
 fi
 echo "${server}"
