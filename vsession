@@ -15,11 +15,16 @@
 
 set -e
 
+# retrieve environment variables that haven't been set yet in this shell but are
+# availabe withen tmux
+eval "$(tmux show-environment -g VMUX_SESSION 2>/dev/null || true)"
+eval "$(tmux show-environment 2>/dev/null| grep VMUX_SESSION_ || true)"
+
 interactive=
 global=
 newsession=
 newsession_no_vars=
-while getopts "inNh" option; do
+while getopts "ignNh" option; do
 	case $option in
 		i) interactive="1"
 			;;
@@ -50,7 +55,7 @@ remove_session_if_not_existent () {
 	if [ -n "${session}" ]; then
 		servers=( $(/usr/bin/vim --serverlist) )
 		found=
-		for s in "$servers[@]"; do
+		for s in "${servers[@]}"; do
 			if [ "$(echo "${session}"|tr '[:lower:]' '[:upper:]')" = "${s}" ]; then
 				found=1
 				break
@@ -72,7 +77,7 @@ create_session_variables () {
 	global="${1}"
 	tsession="${2}"
 	server="${3}"
-	# disable global vsession
+	# global vsession
 	if [ -n "${global}" ] && [ -z "${VMUX_SESSION}" ]; then
 		export VMUX_SESSION="${server}"
 		tmux set-environment -g VMUX_SESSION "${server}"

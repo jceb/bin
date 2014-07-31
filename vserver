@@ -17,13 +17,13 @@ else
 fi
 
 # strip file separator to prevent it from being interpreted as a file
-if [ "${1}" = "--" ]; then
+if [ $# -ge 1 ] && [ "${1}" = "--" ]; then
 	shift
 fi
 
-if [ "$1" = '--help' ] || [ "$1" = '-h' ]; then
+if [ $# -ge 1 ] && ([ "$1" = '--help' ] || [ "$1" = '-h' ]); then
 	exec "${EDITOR}" "$@"
-elif [ "$1" = "-" ]; then
+elif [ $# -ge 1 ] && [ "$1" = "-" ]; then
 	exec "${EDITOR}" --servername "$(vsession "${GLOBAL}")" "$@"
 elif [ $# -ge 1 ]; then
 	exec "${EDITOR}" --servername "$(vsession "${GLOBAL}")" --remote-silent "$@"
