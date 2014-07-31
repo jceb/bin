@@ -1,5 +1,5 @@
 #!/bin/sh
-TERMINAL=/usr/bin/x-terminal-emulator
+TERMINAL=/usr/bin/urxvt
 
 #first_session="$(tmux list-sessions | sed -n -e '1s/:.*//p')"
 first_detached_session="$(tmux list-sessions | grep -v '(attached)$' | sed -n -e '1s/:.*//p')"
