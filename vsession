@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 # Script for integrating vim and tmux
 # Author: Jan Christoph Ebersbach <jceb@e-jc.de>
 # Last Modified: Thu 09. Jan 2014 17:23:11 +0100 CET
