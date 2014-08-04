@@ -8,15 +8,8 @@
 # 	unset f
 # fi
 
-# extend the PATH variable with ~/bin
-for i in "${HOME}/.gem/ruby/1.9.1/bin" "${HOME}/Documents/toolshed/" "${HOME}/.cabal/bin" "${HOME}/.local/bin" "${HOME}/bin"; do
-	if [ -e "$i" ]; then
-		PATH="$i:${PATH}"
-	fi
-done
-export PATH
+source ~/.zsh/rc/env.zsh
 
-export LANG=en_US.UTF-8
 export GTK_IM_MODULE=ibus
 export QT_IM_MODULE=ibus
 export XMODIFIERS=@im=ibus
