@@ -104,7 +104,7 @@ else
 		create_session_variables "${global}" "${tsession}" "${server}"
 	elif [ -n "${local_vmux_session}" ]; then
 		server="${local_vmux_session}"
-	elif [ -n "${VMUX_SESSION}" ]; then
+	elif [ -n "${global}" ] && [ -n "${VMUX_SESSION}" ]; then
 		server="${VMUX_SESSION}"
 	else
 		create_session_variables "${global}" "${tsession}" "${server}"
