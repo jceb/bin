@@ -8,7 +8,7 @@
 # 	unset f
 # fi
 
-source ~/.zsh/rc/env.zsh
+. ~/.zsh/rc/env.zsh
 
 export GTK_IM_MODULE=ibus
 export QT_IM_MODULE=ibus
