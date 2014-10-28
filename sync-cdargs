@@ -37,4 +37,7 @@ if [ -d ~/.cache/ctrlp ]; then
 	sed -e 's/ /\t/' < ~/.cdargs > ~/.cache/ctrlp/bkd/cache.txt
 fi
 
+# ranger {{{1
+sed -e 's/^\([a-zA-Z0-9]\)[a-zA-Z0-9]*\s*\(.*\)/\1:\2/p' > ~/.config/ranger/bookmarks < ~/.cdargs
+
 # vi: ft=sh:tw=0:sw=4:ts=4:fdm=marker
