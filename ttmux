@@ -1,5 +1,0 @@
-#!/bin/sh
-# enable 8 bit input before starting tmux - it doesn't seem to work any other
-# way
-tput smm
-exec tmux "$@"

@@ -1,15 +1,17 @@
 #!/bin/sh
 TERMINAL="st"
 
+# tput smm enables 8 bit shell input
+
 #first_session="$(tmux list-sessions | sed -n -e '1s/:.*//p')"
 first_detached_session="$(tmux list-sessions | grep -v '(attached)$' | sed -n -e '1s/:.*//p')"
 if [ -z "${*}" ] && [ -n "${first_detached_session}" ] ; then
-	"${TERMINAL}" -e ttmux attach-session -t "${first_detached_session}"
+	exec "${TERMINAL}" -e "${SHELL}" -c "tput smm; exec tmux attach-session -t '${first_detached_session}'"
 #elif [ -z "${@}" ] && [ -n "${first_session}" ] ; then
-#	"${TERMINAL}" -e ttmux attach-session -t "${first_session}"
+#	exec "${TERMINAL}" -e "${SHELL}" -c "tput smm; exec tmux attach-session -t '${first_session}'"
 else
 	if [ "${1}" = '-e' ]; then
 		shift 1
 	fi
-	"${TERMINAL}" -e ttmux new-session "${@}"
+	exec "${TERMINAL}" -e "${SHELL}" -c "tput smm; exec tmux new-session '${@}'"
 fi
