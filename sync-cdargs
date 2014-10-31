@@ -5,7 +5,7 @@
 # License: Public Domain
 
 if [[ ! -e ~/.cdargs ]]; then
-	echo "Unable to find file ~/.cdargs." 1>&2
+	echo "Unable to find file ~/.cdargs" 1>&2
 fi
 
 # mc {{{1

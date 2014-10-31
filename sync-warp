@@ -6,7 +6,7 @@
 # License: Public Domain
 
 if [[ ! -e ~/.warprc ]]; then
-	echo "Unable to find file ~/.cdargs." 1>&2
+	echo "Unable to find file ~/.warprc" 1>&2
 fi
 
 # mc {{{1
