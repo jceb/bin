@@ -27,7 +27,8 @@ if [ -d ~/.config/spacefm ]; then
 			continue
 		fi
 		echo "file://${l} ${n}"
-	done < ~/.cdargs > ~/.config/spacefm/bookmarks
+	done < ~/.cdargs | tee ~/.config/spacefm/bookmarks | tee ~/.gtk-bookmarks >> ~/.config/gtk-3.0/bookmarks
+	(cat ~/.config/gtk-3.0/bookmarks) | sort | uniq > ~/.config/gtk-3.0/bookmarks
 fi
 
 
@@ -38,6 +39,6 @@ if [ -d ~/.cache/ctrlp ]; then
 fi
 
 # ranger {{{1
-sed -e 's/^\([a-zA-Z0-9]\)[a-zA-Z0-9]*\s*\(.*\)/\1:\2/p' > ~/.config/ranger/bookmarks < ~/.cdargs
+sed -ne 's/^\([a-zA-Z0-9]\)[a-zA-Z0-9]*\s*\(.*\)/\1:\2/p' > ~/.config/ranger/bookmarks < ~/.cdargs
 
 # vi: ft=sh:tw=0:sw=4:ts=4:fdm=marker

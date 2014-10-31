@@ -21,14 +21,15 @@ while IFS=: read n l; do
 	echo "ENTRY \"${n}\" URL \"${l}\""
 done < ~/.warprc > ~/.config/mc/hotlist
 
-# Spacefm {{{1
+# Spacefm, gtk {{{1
 if [ -d ~/.config/spacefm ]; then
 	while IFS=: read n l; do
 		if [[ -z "${n}" ]] || [[ -z "${l}" ]]; then
 			continue
 		fi
 		echo "file://${l} ${n}"
-	done < ~/.warprc > ~/.config/spacefm/bookmarks
+	done < ~/.warprc | tee ~/.config/spacefm/bookmarks | tee ~/.gtk-bookmarks >> ~/.config/gtk-3.0/bookmarks
+	(cat ~/.config/gtk-3.0/bookmarks) | sort | uniq > ~/.config/gtk-3.0/bookmarks
 fi
 
 
@@ -39,6 +40,6 @@ if [ -d ~/.cache/ctrlp ]; then
 fi
 
 # ranger {{{1
-sed -e 's/^\([a-zA-Z0-9]\)[a-zA-Z0-9]*:\(.*\)/\1:\2/p' > ~/.config/ranger/bookmarks < ~/.warprc
+sed -ne 's/^\([a-zA-Z0-9]\)[a-zA-Z0-9]*:\(.*\)/\1:\2/p' > ~/.config/ranger/bookmarks < ~/.warprc
 
 # vi: ft=sh:tw=0:sw=4:ts=4:fdm=marker
