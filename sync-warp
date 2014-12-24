@@ -39,6 +39,16 @@ if [ -d ~/.cache/ctrlp ]; then
 	sed -e 's/:/\t/' < ~/.warprc > ~/.cache/ctrlp/bkd/cache.txt
 fi
 
+# Fuzzy Finder {{{1
+if [ -d ~/.vim-fuf-data/bookmarkdir ]; then
+	while IFS=: read n l; do
+		if [[ -z "${n}" ]] || [[ -z "${l}" ]]; then
+			continue
+		fi
+		echo "{'word': '${n}', 'path': '${l}', 'time': '$(date +%s)'}"
+	done < ~/.warprc > ~/.vim-fuf-data/bookmarkdir/items
+fi
+
 # ranger {{{1
 sed -ne 's/^\([a-zA-Z0-9]\)[a-zA-Z0-9]*:\(.*\)/\1:\2/p' > ~/.config/ranger/bookmarks < ~/.warprc
 
