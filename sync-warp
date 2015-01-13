@@ -30,8 +30,7 @@ while IFS=: read n l; do
 		continue
 	fi
 	echo "file://${l} ${n}"
-done < ~/.warprc | tee ~/.config/spacefm/bookmarks | tee ~/.gtk-bookmarks >> ~/.config/gtk-3.0/bookmarks
-(cat ~/.config/gtk-3.0/bookmarks) | sort | uniq > ~/.config/gtk-3.0/bookmarks
+done < ~/.warprc | tee ~/.config/spacefm/bookmarks | tee ~/.gtk-bookmarks | sort | uniq > ~/.config/gtk-3.0/bookmarks
 
 
 # CtrlP {{{1
