@@ -22,15 +22,16 @@ while IFS=: read n l; do
 done < ~/.warprc > ~/.config/mc/hotlist
 
 # Spacefm, gtk {{{1
-if [ -d ~/.config/spacefm ]; then
-	while IFS=: read n l; do
-		if [[ -z "${n}" ]] || [[ -z "${l}" ]]; then
-			continue
-		fi
-		echo "file://${l} ${n}"
-	done < ~/.warprc | tee ~/.config/spacefm/bookmarks | tee ~/.gtk-bookmarks >> ~/.config/gtk-3.0/bookmarks
-	(cat ~/.config/gtk-3.0/bookmarks) | sort | uniq > ~/.config/gtk-3.0/bookmarks
+if [ ! -d ~/.config/spacefm ]; then
+	mkdir ~/.config/spacefm
 fi
+while IFS=: read n l; do
+	if [[ -z "${n}" ]] || [[ -z "${l}" ]]; then
+		continue
+	fi
+	echo "file://${l} ${n}"
+done < ~/.warprc | tee ~/.config/spacefm/bookmarks | tee ~/.gtk-bookmarks >> ~/.config/gtk-3.0/bookmarks
+(cat ~/.config/gtk-3.0/bookmarks) | sort | uniq > ~/.config/gtk-3.0/bookmarks
 
 
 # CtrlP {{{1
