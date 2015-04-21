@@ -31,6 +31,7 @@ xsetroot -cursor_name left_ptr
 # start the gpg-agent
 if [ ! -e '/etc/X11/Xsession.d/90gpg-agent' ]; then
 	eval $(gpg-agent --daemon)
+	export GPG_AGENT_INFO
 fi
 
 # start window manager

@@ -10,6 +10,6 @@ import time
 r = Display().screen().root
 
 while True:
-	r.set_wm_name(datetime.now().strftime(u'WK %V, %a %b %e %T %Y'))
+	r.set_wm_name(datetime.now().strftime(u'CW %V, %a %b %e %T %Y'))
 	r.get_wm_name()
 	time.sleep(1)
