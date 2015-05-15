@@ -13,5 +13,10 @@ else
 	if [ "${1}" = '-e' ]; then
 		shift 1
 	fi
-	exec "${TERMINAL}" -e "${SHELL}" -c "tput smm; exec tmux new-session '${@}'"
+	if [ $# -gt 1 ]; then
+		echo "Argument handling not yet implemented" 1>&2
+		# exec "${TERMINAL}" -e "${SHELL}" -c "tput smm; exec tmux new-session ${@}"
+	else
+		exec "${TERMINAL}" -e "${SHELL}" -c "tput smm; exec tmux new-session"
+	fi
 fi
