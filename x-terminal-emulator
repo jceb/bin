@@ -1,11 +1,17 @@
 #!/bin/sh
 TERMINAL="st"
+SHELL="/bin/zsh"
+
+# DEBUG
+# exec 1>/tmp/x 2>&1
+# echo "${@}"
+# set -x
 
 # tput smm enables 8 bit shell input
 
 #first_session="$(tmux list-sessions | sed -n -e '1s/:.*//p')"
 first_detached_session="$(tmux list-sessions | grep -v '(attached)$' | sed -n -e '1s/:.*//p')"
-if [ -z "${*}" ] && [ -n "${first_detached_session}" ] ; then
+if [ $# -eq 0 ] && [ -n "${first_detached_session}" ] ; then
 	exec "${TERMINAL}" -e "${SHELL}" -c "tput smm; exec tmux attach-session -t '${first_detached_session}'"
 #elif [ -z "${@}" ] && [ -n "${first_session}" ] ; then
 #	exec "${TERMINAL}" -e "${SHELL}" -c "tput smm; exec tmux attach-session -t '${first_session}'"
@@ -13,9 +19,10 @@ else
 	if [ "${1}" = '-e' ]; then
 		shift 1
 	fi
-	if [ $# -gt 1 ]; then
-		echo "Argument handling not yet implemented" 1>&2
-		# exec "${TERMINAL}" -e "${SHELL}" -c "tput smm; exec tmux new-session ${@}"
+	if [ $# -ge 1 ]; then
+		# FIXME: tmux crashes when run from firefox!
+		# exec "${TERMINAL}" -e "${SHELL}" -c "tput smm; exec tmux new-session '${*}'"
+		exec "${TERMINAL}" -e "${SHELL}" -c "${*}"
 	else
 		exec "${TERMINAL}" -e "${SHELL}" -c "tput smm; exec tmux new-session"
 	fi
