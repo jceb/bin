@@ -16,12 +16,17 @@ if [ $# -eq 0 ] && [ -n "${first_detached_session}" ] ; then
 #elif [ -z "${@}" ] && [ -n "${first_session}" ] ; then
 #	exec "${TERMINAL}" -e "${SHELL}" -c "tput smm; exec tmux attach-session -t '${first_session}'"
 else
+    class=
+	if [ "${1}" = '-c' ]; then
+		class="-c ${2}"
+		shift 2
+	fi
 	if [ "${1}" = '-e' ]; then
 		shift 1
 	fi
 	if [ $# -ge 1 ]; then
-		TMUX= exec "${TERMINAL}" -e "${SHELL}" -c "tput smm; exec tmux new-session '${*}'"
+		TMUX= exec "${TERMINAL}" ${class} -e "${SHELL}" -c "tput smm; exec tmux new-session '${*}'"
 	else
-		TMUX= exec "${TERMINAL}" -e "${SHELL}" -c "tput smm; exec tmux new-session"
+		TMUX= exec "${TERMINAL}" ${class} -e "${SHELL}" -c "tput smm; exec tmux new-session"
 	fi
 fi
