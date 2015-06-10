@@ -1,2 +1,2 @@
 #!/bin/sh
-exec x-terminal-emulator -c Scratchpad
+exec x-terminal-emulator -c Scratchpad -e vim -c :Scratch
