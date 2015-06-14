@@ -14,10 +14,6 @@ export GTK_IM_MODULE=ibus
 export QT_IM_MODULE=ibus
 export XMODIFIERS=@im=ibus
 
-# fix broken java applications
-AWT_TOOLKIT=MToolkit;				export AWT_TOOLKIT
-_JAVA_AWT_WM_NONREPARENTING=1;		export _JAVA_AWT_WM_NONREPARENTING
-
 # set wallpaper
 #display -window root $HOME/wallpaper0.jpg
 #(DISPLAY=${DISPLAY}.1 display -window root $HOME/wallpaper1.jpg) &
@@ -30,7 +26,6 @@ xsetroot -cursor_name left_ptr
 
 # start the gpg-agent
 if [ ! -e '/etc/X11/Xsession.d/90gpg-agent' ]; then
-	killall gpg-agent &>/dev/null
 	eval $(gpg-agent --daemon)
 	export GPG_AGENT_INFO
 fi
@@ -41,7 +36,11 @@ if test -e "${HOME}/.Xresources"; then
 fi
 dwm &
 
-# start autostart programs
+# autostart programs
 dex -a
 
 wait %1
+
+# kill certain programs that survive the window manager's end
+killall gpg-agent &>/dev/null || true
+killall dbus-daemon &>/dev/null || true
