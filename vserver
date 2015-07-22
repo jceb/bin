@@ -18,17 +18,12 @@ fi
 
 cmd=("${EDITOR}")
 
-if [ $# -ge 1 ] && ([ "${1}" = '-h' ] || [ "${1}" = '--help' ]); then
-	# pass parameters directly to vim
-	cmd+=("${@}")
-	exec "${cmd[@]}"
-elif [ $# -ge 1 ] && [ "${1}" = '--' ]; then
-	# strip file separator to prevent it from being interpreted as a file
-	shift
-fi
-
 if [ $# -ge 1 ]; then
-	cmd+=(--servername "$(vsession "${GLOBAL}")" --remote-silent "$@")
+	cmd+=(--servername "$(vsession "${GLOBAL}")")
+	if [ "${1:0:1}" != "-" ]; then
+		cmd+=(--remote-silent)
+	fi
+	cmd+=("$@")
 else
 	cmd+=(--servername "$(vsession "${GLOBAL}")")
 fi
