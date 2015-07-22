@@ -8,7 +8,8 @@ SHELL="/bin/zsh"
 # set -x
 
 # tput smm enables 8 bit shell input
-ENABLE_8_BIT="tput smm;"
+# ENABLE_8_BIT="tput smm;"
+ENABLE_8_BIT=""
 
 command=("${TERMINAL}")
 
