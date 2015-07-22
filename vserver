@@ -16,16 +16,20 @@ else
 	EDITOR="${REALEDITOR:=/usr/bin/vim}"
 fi
 
-if [ $# -ge 1 ] && [ "${1}" != '--' ] && [ "${1:0:1}" = '-' ]; then
+cmd=("${EDITOR}")
+
+if [ $# -ge 1 ] && ([ "${1}" != '--' ] || [ "${1}" = '-h' ] || [ "${1}" = '--help' ]); then
 	# pass parameters directly to vim
-	exec "${EDITOR}" "$@"
+	cmd+=("${@}")
+	exec "${cmd[@]}"
 elif [ $# -ge 1 ] && [ "${1}" = '--' ]; then
 	# strip file separator to prevent it from being interpreted as a file
 	shift
 fi
 
 if [ $# -ge 1 ]; then
-	exec "${EDITOR}" --servername "$(vsession "${GLOBAL}")" --remote-silent "$@"
+	cmd+=(--servername "$(vsession "${GLOBAL}")" --remote-silent "$@")
 else
-	exec "${EDITOR}" --servername "$(vsession "${GLOBAL}")"
+	cmd+=(--servername "$(vsession "${GLOBAL}")")
 fi
+exec "${cmd[@]}"
