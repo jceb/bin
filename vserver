@@ -18,7 +18,7 @@ fi
 
 cmd=("${EDITOR}")
 
-if [ $# -ge 1 ] && ([ "${1}" != '--' ] || [ "${1}" = '-h' ] || [ "${1}" = '--help' ]); then
+if [ $# -ge 1 ] && ([ "${1}" = '-h' ] || [ "${1}" = '--help' ]); then
 	# pass parameters directly to vim
 	cmd+=("${@}")
 	exec "${cmd[@]}"
