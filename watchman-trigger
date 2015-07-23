@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-# watchtrigger
+# watchman-trigger
 #  A little wrapper around watchman to make it possible to define a
 #  trigger on the command line without having the file names appended to
 #  it.
@@ -46,14 +46,17 @@ from docopt import docopt
 __doc__ = """Wrapper for watchman trigger.
 
 Usage:
-  watchtrigger [-va] <path> <name> <expression> -- <command>...
-  watchtrigger [-va] <path> <name> <expression> <expression> -- <command>...
-  watchtrigger [-va] <path> <name> <expression> <expression> <expression> -- <command>...
-  watchtrigger (-h | --help)
-  watchtrigger --version
+  watchman-trigger [-va] <path> <name> <expression> -- <command>...
+  watchman-trigger [-va] <path> <name> <expression> <expression> -- <command>...
+  watchman-trigger [-va] <path> <name> <expression> <expression> <expression> -- <command>...
+  watchman-trigger [-va] <path> <name> <expression> <expression> <expression> <expression> -- <command>...
+  watchman-trigger [-va] <path> <name> <expression> <expression> <expression> <expression> <expression> -- <command>...
+  watchman-trigger [-va] <path> <name> <expression> <expression> <expression> <expression> <expression> <expression> -- <command>...
+  watchman-trigger (-h | --help)
+  watchman-trigger --version
 
 Examples:
-  watchtrigger . build '*.c' '*.h' -- make build
+  watchman-trigger . build '*.c' '*.h' -- make build
 
 Arguments:
   path          Path to watched directory.
@@ -74,7 +77,7 @@ __version__ = 0.1
 
 
 if __name__ == '__main__':
-    args = docopt(__doc__, version='watchtrigger %s' % str(__version__))
+    args = docopt(__doc__, version='watchman-trigger %s' % str(__version__))
     logging.basicConfig(level=logging.DEBUG if args['-v'] else logging.WARNING)
     logging.debug('input: %s', args)
 
