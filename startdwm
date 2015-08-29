@@ -3,11 +3,16 @@
 
 . ~/.zsh/rc/env.zsh
 
+# enable ibus
 export GTK_IM_MODULE=ibus
 export QT_IM_MODULE=ibus
 export QT4_IM_MODULE=ibus
 export CLUTTER_IM_MODULE=ibus
 export XMODIFIERS=@im=ibus
+
+# force XFT
+export GDK_USE_XFT=1
+export QT_XFT=true
 
 # set wallpaper
 #display -window root $HOME/wallpaper0.jpg
@@ -34,6 +39,7 @@ dwm &
 # autostart programs
 dex -a
 
+# everything has been started, wait here for dwm to terminate
 wait %1
 
 # kill certain programs that survive the window manager's end
