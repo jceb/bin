@@ -17,8 +17,8 @@ set -e
 
 # retrieve environment variables that haven't been set yet in this shell but are
 # availabe withen tmux
-eval "$(tmux show-environment -g VMUX_SESSION 2>/dev/null || true)"
-eval "$(tmux show-environment 2>/dev/null| grep VMUX_SESSION_ || true)"
+eval "$([ -n "${TMUX}" ] && tmux show-environment -g VMUX_SESSION 2>/dev/null || true)"
+eval "$([ -n "${TMUX}" ] && tmux show-environment 2>/dev/null| grep VMUX_SESSION_ || true)"
 
 interactive=
 global=
@@ -48,6 +48,10 @@ while getopts "ignNh" option; do
 done
 
 remove_session_if_not_existent () {
+	if [ -z "${TMUX}" ]; then
+		return 0
+	fi
+
 	local servers session sessionvar found global
 	session="$1"
 	sessionvar="$2"
@@ -73,6 +77,10 @@ remove_session_if_not_existent () {
 }
 
 create_session_variables () {
+	if [ -z "${TMUX}" ]; then
+		return 0
+	fi
+
 	local global tsession server
 	global="${1}"
 	tsession="${2}"
@@ -89,7 +97,7 @@ if [ -n "${interactive}" ]; then
 	server="$(/usr/bin/vim --serverlist | dmenu)"
 else
 	server="v_$(echo "$(basename $(dirname "$PWD"))_$(basename "$PWD")" | sed -e 's#[^a-zA-Z0-9_-]##g')"
-	tsession=$(tmux display-message -p '#S')
+	tsession=$(([ -n "${TMUX}" ] && tmux display-message -p '#S') || echo "0")
 	server="${server}_${tsession}"
 	local_vmux_session="$(eval "echo \"\${VMUX_SESSION_${tsession}}\"")"
 
