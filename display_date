@@ -1,7 +1,8 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 #
 # Display date in dwm's status line
+
 
 from Xlib.display import Display
 from datetime import datetime
