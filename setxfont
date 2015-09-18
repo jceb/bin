@@ -1,4 +1,4 @@
 #!/bin/sh
 fc-cache -f ~/.fonts/
-find $HOME/.fonts/ -type d -print0 | xargs -0 -n 1 xset +fp
+find $HOME/.fonts/ -type d -print0 | xargs -0 -n 1 -I {} bash -c '[ -e "{}/fonts.dir" ] && xset +fp {}'
 xset fp rehash
