@@ -14,6 +14,9 @@ export XMODIFIERS=@im=ibus
 export GDK_USE_XFT=1
 export QT_XFT=true
 
+# somehow the graphics system seems to be broken with current versions of QT
+QT_GRAPHICSSYSTEM=native
+
 # set wallpaper
 #display -window root $HOME/wallpaper0.jpg
 #(DISPLAY=${DISPLAY}.1 display -window root $HOME/wallpaper1.jpg) &
