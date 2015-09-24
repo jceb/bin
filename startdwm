@@ -15,7 +15,8 @@ export GDK_USE_XFT=1
 export QT_XFT=true
 
 # somehow the graphics system seems to be broken with current versions of QT
-QT_GRAPHICSSYSTEM=native
+export QT_GRAPHICSSYSTEM=native
+export QT_QPA_PLATFORMTHEME=qt5ct
 
 # set wallpaper
 #display -window root $HOME/wallpaper0.jpg
