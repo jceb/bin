@@ -35,10 +35,10 @@ while getopts "ignNh" option; do
 		N) newsession_no_vars="1"
 			;;
 		h) echo "$(basename "$0") (-i|-n|-N|-h)"
-			echo "\t-i interactive selection of a vim server"
-			echo "\t-g create/select a global vim server"
-			echo "\t-n create a new vim server despite any existing servers"
-			echo "\t-N create a new vim server despite any existing servers but don't create session variables"
+			echo -e "\t-i interactive selection of a vim server"
+			echo -e "\t-g create/select a global vim server"
+			echo -e "\t-n create a new vim server despite any existing servers"
+			echo -e "\t-N create a new vim server despite any existing servers but don't create session variables"
 			exit
 			;;
 		*) echo "Unknown argument ${option}" 1>&2
