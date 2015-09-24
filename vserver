@@ -5,8 +5,8 @@ set -e
 set -u
 
 GLOBAL=
-if [ "$(basename "$0")" = "gserver" ]; then
-	GLOBAL="-g"
+if [ "$(basename "$0")" = 'gserver' ]; then
+	GLOBAL='-g'
 fi
 
 # enforce editor to make it work better with tmux and ranger
@@ -20,7 +20,16 @@ cmd=("${EDITOR}")
 
 if [ $# -ge 1 ]; then
 	cmd+=(--servername "$(vsession "${GLOBAL}")")
-	if [ "${1:0:1}" != "-" ]; then
+	if [ "${1}" = '--' ] || [ "${1:0:1}" != '-' ]; then
+		# if the first arguments start with - it's an option to vim which will
+		# not be executed in a remote session
+
+		# strip --
+		if [ "${1}" = '--' ]; then
+			shift
+		fi
+
+		# connect to a remote session
 		cmd+=(--remote-silent)
 	fi
 	cmd+=("$@")
