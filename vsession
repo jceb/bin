@@ -14,19 +14,23 @@
 # vvv, interactive server name seletion for a new vim server
 
 set -e
+set -u
 
 # retrieve environment variables that haven't been set yet in this shell but are
 # availabe withen tmux
-eval "$([ -n "${TMUX}" ] && tmux show-environment -g VMUX_SESSION 2>/dev/null || true)"
-eval "$([ -n "${TMUX}" ] && tmux show-environment 2>/dev/null| grep VMUX_SESSION_ || true)"
+eval "$([[ -n "${TMUX}" ]] && tmux show-environment -g VMUX_SESSION 2>/dev/null || true)"
+eval "$([[ -n "${TMUX}" ]] && tmux show-environment 2>/dev/null| grep VMUX_SESSION_ || true)"
 
 interactive=
+neovim=
 global=
 newsession=
 newsession_no_vars=
-while getopts "ignNh" option; do
+while getopts "eignNh" option; do
 	case $option in
 		i) interactive="1"
+			;;
+		e) neovim="1"
 			;;
 		g) global="1"
 			;;
@@ -36,6 +40,7 @@ while getopts "ignNh" option; do
 			;;
 		h) echo "$(basename "$0") (-i|-n|-N|-h)"
 			echo -e "\t-i interactive selection of a vim server"
+			echo -e "\t-e create/select a neovim server"
 			echo -e "\t-g create/select a global vim server"
 			echo -e "\t-n create a new vim server despite any existing servers"
 			echo -e "\t-N create a new vim server despite any existing servers but don't create session variables"
@@ -48,7 +53,7 @@ while getopts "ignNh" option; do
 done
 
 remove_session_if_not_existent () {
-	if [ -z "${TMUX}" ]; then
+	if [[ -z "${TMUX}" ]]; then
 		return 0
 	fi
 
@@ -56,17 +61,23 @@ remove_session_if_not_existent () {
 	session="$1"
 	sessionvar="$2"
 	global="$3"
-	if [ -n "${session}" ]; then
-		servers=( $(/usr/bin/vim --serverlist) )
+	if [[ -n "${session}" ]]; then
 		found=
-		for s in "${servers[@]}"; do
-			if [ "$(echo "${session}"|tr '[:lower:]' '[:upper:]')" = "${s}" ]; then
+		if [[ -n "${neovim}" ]]; then
+			if [[ -e "${session}" ]]; then
 				found=1
-				break
 			fi
-		done
-		if [ -z "${found}" ]; then
-			if [ -n "${global}" ]; then
+		else
+			servers=( $(/usr/bin/vim --serverlist) )
+			for s in "${servers[@]}"; do
+				if [[ "$(echo "${session}"|tr '[:lower:]' '[:upper:]')" = "${s}" ]]; then
+					found=1
+					break
+				fi
+			done
+		fi
+		if [[ -z "${found}" ]]; then
+			if [[ -n "${global}" ]]; then
 				tmux set-environment -g -u "${sessionvar}"
 			fi
 			tmux set-environment -u "${sessionvar}"
@@ -77,7 +88,7 @@ remove_session_if_not_existent () {
 }
 
 create_session_variables () {
-	if [ -z "${TMUX}" ]; then
+	if [[ -z "${TMUX}" ]]; then
 		return 0
 	fi
 
@@ -86,33 +97,51 @@ create_session_variables () {
 	tsession="${2}"
 	server="${3}"
 	# global vsession
-	if [ -n "${global}" ] && [ -z "${VMUX_SESSION}" ]; then
+	if [[ -n "${global}" ]] && [[ -z "${VMUX_SESSION}" ]]; then
 		export VMUX_SESSION="${server}"
 		tmux set-environment -g VMUX_SESSION "${server}"
 	fi
 	tmux set-environment "VMUX_SESSION_${tsession}" "${server}"
 }
 
-if [ -n "${interactive}" ]; then
-	server="$(/usr/bin/vim --serverlist | dmenu)"
+if [[ -n "${interactive}" ]]; then
+	if [[ -n "${neovim}" ]]; then
+		echo "Interactive selection not supported with neovim!" 1>&2
+		exit 1
+	else
+		server="$(/usr/bin/vim --serverlist | dmenu)"
+	fi
 else
-	server="v_$(echo "$(basename $(dirname "$PWD"))_$(basename "$PWD")" | sed -e 's#[^a-zA-Z0-9_-]##g')"
-	tsession=$(([ -n "${TMUX}" ] && tmux display-message -p '#S') || echo "0")
-	server="${server}_${tsession}"
+	tsession=$(([[ -n "${TMUX}" ]] && tmux display-message -p '#S') || echo "0")
+	set +u
 	local_vmux_session="$(eval "echo \"\${VMUX_SESSION_${tsession}}\"")"
+	set -u
 
+	if [[ -n "${neovim}" ]]; then
+		server="$(mktemp -d -t nvimXXXXX)/0"
+	else
+		server="v_$(echo "$(basename $(dirname "$PWD"))_$(basename "$PWD")" | sed -e 's#[^a-zA-Z0-9_-]##g')"
+		server="${server}_${tsession}"
+	fi
+
+	set +u
 	remove_session_if_not_existent "${local_vmux_session}" "VMUX_SESSION_${tsession}" '' && eval "unset 'VMUX_SESSION_${tsession}'" || true
 	# disable global vsession
 	remove_session_if_not_existent "${VMUX_SESSION}" 'VMUX_SESSION' '1' && unset 'VMUX_SESSION' || true
+	set -u
 
-	if [ -n "${newsession_no_vars}" ]; then
+	if [[ -n "${newsession_no_vars}" ]]; then
 		# don't create session variables
 		: pass
-	elif [ -n "${newsession}" ]; then
+	elif [[ -n "${newsession}" ]]; then
 		create_session_variables "${global}" "${tsession}" "${server}"
-	elif [ -n "${local_vmux_session}" ]; then
+	elif [[ -n "${local_vmux_session}" ]]; then
+		if [[ -n "${neovim}" ]] && [[ ! -e "${server}" ]]; then
+			rmdir "$(dirname "${server}")"
+		fi
 		server="${local_vmux_session}"
-	elif [ -n "${global}" ] && [ -n "${VMUX_SESSION}" ]; then
+
+	elif [[ -n "${global}" ]] && [[ -n "${VMUX_SESSION}" ]]; then
 		server="${VMUX_SESSION}"
 	else
 		create_session_variables "${global}" "${tsession}" "${server}"

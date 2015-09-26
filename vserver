@@ -4,36 +4,90 @@
 set -e
 set -u
 
-GLOBAL=
-if [ "$(basename "$0")" = 'gserver' ]; then
-	GLOBAL='-g'
+SERVER=
+if [[ "$(basename "$0")" = 'gserver' ]]; then
+    # this is not quite exact - gserver → gvim is not equal to creating a global
+    # session
+	SERVER='-g'
+elif [[ "$(basename "$0")" = 'nserver' ]]; then
+	SERVER='-e'
 fi
 
 # enforce editor to make it work better with tmux and ranger
-if [ -n "${GLOBAL}" ]; then
+if [[ "${SERVER}" = '-g' ]]; then
 	EDITOR="${REALEDITOR:=/usr/bin/gvim}"
+elif [[ "${SERVER}" = '-e' ]]; then
+	EDITOR="${REALEDITOR:=/usr/bin/nvim}"
 else
 	EDITOR="${REALEDITOR:=/usr/bin/vim}"
 fi
 
+# 1. get the right address - it can be conveyed via NVIM_LISTEN_ADDRESS
+
 cmd=("${EDITOR}")
+session="$(vsession "${SERVER}")"
 
-if [ $# -ge 1 ]; then
-	cmd+=(--servername "$(vsession "${GLOBAL}")")
-	if [ "${1}" = '--' ] || [ "${1:0:1}" != '-' ]; then
-		# if the first arguments start with - it's an option to vim which will
-		# not be executed in a remote session
+if [[ "${SERVER}" = '-e' ]]; then
+	# neovim server path
+	if [[ -e "${session}" ]]; then
+		pythoncmd="from neovim import attach; nvim = attach('socket', path='${session}')"
+		cmd=('python' '-c')
+		if [[ $# -ge 1 ]]; then
+			if [[ "${1}" = '--' ]] || [[ "${1:0:1}" != '-' ]]; then
+				# if the first arguments start with - it's an option to vim which will
+				# not be executed in a remote session
 
-		# strip --
-		if [ "${1}" = '--' ]; then
-			shift
+				# strip --
+				if [[ "${1}" = '--' ]]; then
+					shift
+				fi
+
+				if [[ $# -ge 1 ]]; then
+					for i in "${@}"; do
+						pythoncmd="${pythoncmd}; nvim.command('e $i')"
+					done
+					cmd+=("${pythoncmd}")
+				fi
+			fi
 		fi
+	else
+		if [[ $# -ge 1 ]]; then
+			if [[ "${1}" = '--' ]] || [[ "${1:0:1}" != '-' ]]; then
+				# if the first arguments start with - it's an option to vim which will
+				# not be executed in a remote session
 
-		# connect to a remote session
-		cmd+=(--remote-silent)
+				# strip --
+				if [[ "${1}" = '--' ]]; then
+					shift
+				fi
+			fi
+		fi
 	fi
-	cmd+=("$@")
 else
-	cmd+=(--servername "$(vsession "${GLOBAL}")")
+	# vim server path
+	cmd+=(--servername "${session}")
+	if [[ $# -ge 1 ]]; then
+		if [[ "${1}" = '--' ]] || [[ "${1:0:1}" != '-' ]]; then
+			# if the first arguments start with - it's an option to vim which will
+			# not be executed in a remote session
+
+			# strip --
+			if [[ "${1}" = '--' ]]; then
+				shift
+			fi
+
+			# connect to a remote session
+			if [[ $# -ge 1 ]]; then
+				cmd+=(--remote-silent)
+			fi
+		fi
+	fi
 fi
-exec "${cmd[@]}"
+cmd+=("$@")
+
+
+if [[ "${SERVER}" = '-e' ]]; then
+	NVIM_LISTEN_ADDRESS="${session}" exec "${cmd[@]}"
+else
+	exec "${cmd[@]}"
+fi
