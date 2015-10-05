@@ -18,8 +18,10 @@ set -u
 
 # retrieve environment variables that haven't been set yet in this shell but are
 # availabe withen tmux
+set +u
 eval "$([[ -n "${TMUX}" ]] && tmux show-environment -g VMUX_SESSION 2>/dev/null || true)"
 eval "$([[ -n "${TMUX}" ]] && tmux show-environment 2>/dev/null| grep VMUX_SESSION_ || true)"
+set -u
 
 interactive=
 neovim=
@@ -53,9 +55,12 @@ while getopts "eignNh" option; do
 done
 
 remove_session_if_not_existent () {
+	set +u
 	if [[ -z "${TMUX}" ]]; then
+		set -u
 		return 0
 	fi
+	set -u
 
 	local servers session sessionvar found global
 	session="$1"
@@ -88,20 +93,26 @@ remove_session_if_not_existent () {
 }
 
 create_session_variables () {
+	set +u
 	if [[ -z "${TMUX}" ]]; then
+		set -u
 		return 0
 	fi
+	set -u
 
 	local global tsession server
 	global="${1}"
 	tsession="${2}"
 	server="${3}"
 	# global vsession
+	set +u
 	if [[ -n "${global}" ]] && [[ -z "${VMUX_SESSION}" ]]; then
+		set -u
 		export VMUX_SESSION="${server}"
 		tmux set-environment -g VMUX_SESSION "${server}"
 	fi
 	tmux set-environment "VMUX_SESSION_${tsession}" "${server}"
+	set -u
 }
 
 if [[ -n "${interactive}" ]]; then
@@ -112,8 +123,8 @@ if [[ -n "${interactive}" ]]; then
 		server="$(/usr/bin/vim --serverlist | dmenu)"
 	fi
 else
-	tsession=$(([[ -n "${TMUX}" ]] && tmux display-message -p '#S') || echo "0")
 	set +u
+	tsession=$(([[ -n "${TMUX}" ]] && tmux display-message -p '#S') || echo "0")
 	local_vmux_session="$(eval "echo \"\${VMUX_SESSION_${tsession}}\"")"
 	set -u
 
@@ -124,9 +135,9 @@ else
 		server="${server}_${tsession}"
 	fi
 
-	set +u
 	remove_session_if_not_existent "${local_vmux_session}" "VMUX_SESSION_${tsession}" '' && eval "unset 'VMUX_SESSION_${tsession}'" || true
 	# disable global vsession
+	set +u
 	remove_session_if_not_existent "${VMUX_SESSION}" 'VMUX_SESSION' '1' && unset 'VMUX_SESSION' || true
 	set -u
 
@@ -140,7 +151,6 @@ else
 			rmdir "$(dirname "${server}")"
 		fi
 		server="${local_vmux_session}"
-
 	elif [[ -n "${global}" ]] && [[ -n "${VMUX_SESSION}" ]]; then
 		server="${VMUX_SESSION}"
 	else
