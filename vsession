@@ -74,12 +74,17 @@ remove_session_if_not_existent () {
 			fi
 		else
 			servers=( $(/usr/bin/vim --serverlist) )
-			for s in "${servers[@]}"; do
-				if [[ "$(echo "${session}"|tr '[:lower:]' '[:upper:]')" = "${s}" ]]; then
-					found=1
-					break
-				fi
-			done
+			set +u
+			if [[ -n "${servers}" ]]; then
+				set -u
+				for s in "${servers[@]}"; do
+					if [[ "$(echo "${session}"|tr '[:lower:]' '[:upper:]')" = "${s}" ]]; then
+						found=1
+						break
+					fi
+				done
+			fi
+			set -u
 		fi
 		if [[ -z "${found}" ]]; then
 			if [[ -n "${global}" ]]; then
