@@ -17,7 +17,11 @@ fi
 if [[ "${SERVER}" = '-g' ]]; then
 	EDITOR="${REALEDITOR:=/usr/bin/gvim}"
 elif [[ "${SERVER}" = '-e' ]]; then
-	EDITOR="${REALEDITOR:=/usr/bin/nvim}"
+    if [[ -e "${HOME}/.local/bin/nvim" ]]; then
+        EDITOR="${REALEDITOR:=${HOME}/.local/bin/nvim}"
+    else
+        EDITOR="${REALEDITOR:=/usr/bin/nvim}"
+    fi
 else
 	EDITOR="${REALEDITOR:=/usr/bin/vim}"
 fi
