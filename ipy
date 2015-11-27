@@ -1,3 +1,3 @@
 #!/bin/sh
-exec ipython3 notebook
+exec ipython3 notebook --no-mathjax
 #--matplotlib=inline --pylab=inline
