@@ -33,4 +33,4 @@ xmodmap -e "add mod5 = ISO_Level3_Shift"
 
 setxkbmap -option compose:caps,altwin:super_win
 
-xset r rate 400 30
+xset r rate 350 30
