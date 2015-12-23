@@ -17,4 +17,4 @@ SHORTCUTS="
 "
 
 query="$(echo "${SHORTCUTS}" | dmenu)"
-[ -n "${query}" ] && x-www-browser "https://duckduckgo.com/?q=${query}"
+[ -n "${query}" ] && exec x-www-browser "https://duckduckgo.com/?q=${query}"
