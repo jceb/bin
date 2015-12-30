@@ -4,6 +4,7 @@ set -u
 
 SHORTCUTS="
 !ade
+!duden
 !g
 !gi
 !github
