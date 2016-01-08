@@ -38,9 +38,9 @@ if [ ! -e '/etc/X11/Xsession.d/90gpg-agent' ]; then
 fi
 
 # start window manager
-if test -e "${HOME}/.Xresources"; then
-	xrdb "$HOME/.Xresources"
-fi
+# if test -e "${HOME}/.Xresources"; then
+# 	xrdb "$HOME/.Xresources"
+# fi
 dwm &
 
 # autostart programs
