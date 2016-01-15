@@ -1,0 +1,2 @@
+#!/bin/sh
+VIS_PATH=~/.local/share/vis exec ~/.local/bin/vis "${@}"
