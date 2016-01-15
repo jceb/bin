@@ -31,6 +31,6 @@ xmodmap -e "add mod4 = Hyper_L"
 xmodmap -e "add mod5 = Mode_switch"
 xmodmap -e "add mod5 = ISO_Level3_Shift"
 
-setxkbmap -option compose:caps,altwin:super_win
+setxkbmap $(cat ~/.Xkbmap)
 
 xset r rate 350 30

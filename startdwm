@@ -1,8 +1,6 @@
 #!/bin/sh
 # dwm startup script
 
-cd ~/
-
 . ~/.zsh/rc/env.zsh
 
 # enable ibus
