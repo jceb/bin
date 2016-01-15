@@ -32,6 +32,8 @@ xmodmap -e "add mod5 = Mode_switch"
 xmodmap -e "add mod5 = ISO_Level3_Shift"
 
 # look at /usr/share/X11/xkb/rules/base.lst
+# for grp:ctrls_toggle see also https://bugs.freedesktop.org/show_bug.cgi?id=15843
+# /usr/share/X11/xkb/symbols/group
 setxkbmap $(cat ~/.Xkbmap)
 
 xset r rate 350 30
