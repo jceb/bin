@@ -35,6 +35,9 @@ if [ ! -e '/etc/X11/Xsession.d/90gpg-agent' ]; then
 	export GPG_AGENT_INFO
 fi
 
+# start ssh-agent
+eval $(ssh-agent)
+
 # start window manager
 # if test -e "${HOME}/.Xresources"; then
 # 	xrdb "$HOME/.Xresources"
