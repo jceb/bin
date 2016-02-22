@@ -36,7 +36,9 @@ if [ ! -e '/etc/X11/Xsession.d/90gpg-agent' ]; then
 fi
 
 # start ssh-agent
-eval $(ssh-agent)
+if [ ! -e '/etc/X11/Xsession.d/90x11-common_ssh-agent' ]; then
+    eval $(ssh-agent)
+fi
 
 # start window manager
 # if test -e "${HOME}/.Xresources"; then
