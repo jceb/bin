@@ -1,2 +1,2 @@
 #!/bin/sh
-VIS_PATH=~/.local/share/vis exec ~/.local/bin/vis "${@}"
+VIS_PATH="$HOME/.local/share/vis" VIS_THEME="papercolor" exec ~/.local/bin/vis "${@}"
