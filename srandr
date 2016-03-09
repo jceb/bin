@@ -1,0 +1,15 @@
+#!/bin/sh
+
+case "${SRANDRD_ACTION}" in
+    "HDMI1 connected" )
+        xrandr --output HDMI1 --auto --right-of eDP1
+        imlibsetroot -x 0 -s ~/wallpaper.png -x 1 -s ~/wallpaper1.png
+        ;;
+    "eDP1 connected" )
+        imlibsetroot -x 0 -s ~/wallpaper.png
+        ;;
+    "DP2 connected" )
+        xrandr --output DP2 --auto --left-of eDP1
+        imlibsetroot -x 0 -s ~/wallpaper.png -x 1 -s ~/wallpaper1.png -x 2 -s ~/wallpaper1.png
+        ;;
+esac
