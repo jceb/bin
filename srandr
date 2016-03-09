@@ -1,15 +1,24 @@
 #!/bin/sh
 
+set -x
 case "${SRANDRD_ACTION}" in
     "HDMI1 connected" )
         xrandr --output HDMI1 --auto --right-of eDP1
-        imlibsetroot -x 0 -s ~/wallpaper.png -x 1 -s ~/wallpaper1.png
+        if [ $(xrandr | grep \* | wc -l) -eq 3 ]; then
+            imlibsetroot -x 0 -s ~/wallpaper1920x1080.png -x 1 -s ~/wallpaper1280x1024.png -x 2 -s ~/wallpaper1920x1200.png
+        else
+            imlibsetroot -x 0 -s ~/wallpaper1920x1080.png -x 1 -s ~/wallpaper1920x1200.png
+        fi
         ;;
     "eDP1 connected" )
-        imlibsetroot -x 0 -s ~/wallpaper.png
+        imlibsetroot -x 0 -s ~/wallpaper1920x1080.png
         ;;
     "DP2 connected" )
         xrandr --output DP2 --auto --left-of eDP1
-        imlibsetroot -x 0 -s ~/wallpaper.png -x 1 -s ~/wallpaper1.png -x 2 -s ~/wallpaper1.png
+        if [ $(xrandr | grep \* | wc -l) -eq 3 ]; then
+            imlibsetroot -x 0 -s ~/wallpaper1920x1080.png -x 1 -s ~/wallpaper1920x1200.png -x 2 -s ~/wallpaper1280x1024.png
+        else
+            imlibsetroot -x 0 -s ~/wallpaper1920x1080.png -x 1 -s ~/wallpaper1280x1024.png
+        fi
         ;;
 esac
