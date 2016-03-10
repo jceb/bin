@@ -24,6 +24,8 @@ get_wallpaper() {
     res=$(get_resolution "${1}")
     if [ -n "${res}" ]; then
         echo "${HOME}/wallpaper${res}.png"
+    else
+        echo "${HOME}/wallpaper.png"
     fi
 }
 
@@ -31,7 +33,7 @@ get_position() {
     # $1: output name
     case "${1}" in
         'HDMI1' )
-            echo '--below eDP1'
+            echo '--above eDP1'
             ;;
         'DP2' )
             echo '--left-of eDP1'
