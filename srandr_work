@@ -1,0 +1,85 @@
+#!/bin/bash
+
+get_action() {
+    # $1: SRANDRD_ACTION string
+    echo "${1}" | awk '/ (dis)?connected/ {print $2}'
+}
+
+get_output() {
+    # $1: SRANDRD_ACTION string
+    echo "${1}" | sed -ne 's/ \(dis\)\?connected//p'
+}
+
+get_outputs() {
+    xrandr | awk '/^[a-zA-Z0-9]+ connected/ {print $1}'
+}
+
+get_resolution() {
+    # $1: output name
+    xrandr | grep -A1 "^${1} connected" | awk '/^\s/ {print $1}'
+}
+
+get_wallpaper() {
+    # $1: output name
+    res=$(get_resolution "${1}")
+    if [ -n "${res}" ]; then
+        echo "${HOME}/wallpaper${res}.png"
+    fi
+}
+
+get_position() {
+    # $1: output name
+    case "${1}" in
+        'HDMI1' )
+            echo '--below eDP1'
+            ;;
+        'DP2' )
+            echo '--left-of eDP1'
+            ;;
+    esac
+}
+
+if [ "$(get_action "${SRANDRD_ACTION}")" = 'connected' ]; then
+    output="$(get_output "${SRANDRD_ACTION}")"
+    position="$(get_position "${output}")"
+    if [ -n "${position}" ]; then
+        xrandr --output "${output}" --auto ${position}
+    fi
+fi
+
+# BUG: xrandr doesn't report the outputs in the right order
+i=0
+cmd=(imlibsetroot)
+for output in $(get_outputs); do
+    wallpaper="$(get_wallpaper "${output}")"
+    if [ -n "${wallpaper}" ]; then
+        cmd+=(-x "${i}" -s "${wallpaper}")
+    fi
+    i=$((i+1))
+done
+if [ ${#cmd[@]} -gt 1 ]; then
+    "${cmd[@]}"
+fi
+
+
+# case "${SRANDRD_ACTION}" in
+#     'HDMI1 connected' )
+#         xrandr --output HDMI1 --auto --right-of eDP1
+#         if [ $(xrandr | grep \* | wc -l) -eq 3 ]; then
+#             imlibsetroot -x 0 -s "$(get_wallpaper eDP1)" -x 1 -s "$(get_wallpaper DP2)" -x 2 -s "$(get_wallpaper HDMI1)"
+#         else
+#             imlibsetroot -x 0 -s ~/wallpaper1920x1080.png -x 1 -s ~/wallpaper1920x1200.png
+#         fi
+#         ;;
+#     "eDP1 connected" )
+#         imlibsetroot -x 0 -s ~/wallpaper1920x1080.png
+#         ;;
+#     "DP2 connected" )
+#         xrandr --output DP2 --auto --left-of eDP1
+#         if [ $(xrandr | grep \* | wc -l) -eq 3 ]; then
+#             imlibsetroot -x 0 -s ~/wallpaper1920x1080.png -x 1 -s ~/wallpaper1920x1200.png -x 2 -s ~/wallpaper1280x1024.png
+#         else
+#             imlibsetroot -x 0 -s ~/wallpaper1920x1080.png -x 1 -s ~/wallpaper1280x1024.png
+#         fi
+#         ;;
+# esac
