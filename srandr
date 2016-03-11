@@ -31,15 +31,15 @@ get_position() {
     # $1: output name
     case "${1}" in
         'HDMI1' )
-            echo '--right-of eDP1'
+            echo '--left-of eDP1'
             ;;
         'DP2' )
-            echo '--left-of eDP1'
+            echo '--right-of eDP1'
             ;;
     esac
 }
 
-set -x
+# set -x
 if [ "$(get_action "${SRANDRD_ACTION}")" = 'connected' ]; then
     output="$(get_output "${SRANDRD_ACTION}")"
     position="$(get_position "${output}")"
