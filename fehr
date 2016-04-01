@@ -1,4 +1,6 @@
 #!/bin/bash
+# wrapper around feh execution from a file manager to support view all images in
+# the current directory
 cmd=(exec feh)
 if [ $# -eq 1 ]; then
     cmd+=(--start-at "${1}" "$(dirname "${1}")")
