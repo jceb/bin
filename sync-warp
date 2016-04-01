@@ -29,8 +29,8 @@ while IFS=: read n l; do
 	if [[ -z "${n}" ]] || [[ -z "${l}" ]]; then
 		continue
 	fi
-	echo "file://${l} ${n}"
-done < ~/.warprc | tee ~/.config/spacefm/bookmarks | tee ~/.gtk-bookmarks | sort | uniq > ~/.config/gtk-3.0/bookmarks
+	echo "file://${l/ /%20} ${n}"
+done < ~/.warprc | sort | uniq | tee ~/.config/spacefm/bookmarks | tee ~/.gtk-bookmarks > ~/.config/gtk-3.0/bookmarks
 
 
 # CtrlP {{{1
