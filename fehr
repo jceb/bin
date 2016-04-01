@@ -1,0 +1,8 @@
+#!/bin/bash
+cmd=(exec feh)
+if [ $# -eq 1 ]; then
+    cmd+=(--start-at "${1}" "$(dirname "${1}")")
+else
+    cmd+=("${@}")
+fi
+"${cmd[@]}"
