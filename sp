@@ -1,2 +1,3 @@
 #!/bin/sh
-tmux split-window "${@}" & disown; tmux select-pane -t :.-1
+tmux split-window "${@}"
+tmux select-pane -t :.-1
