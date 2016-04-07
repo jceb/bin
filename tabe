@@ -1,2 +1,3 @@
 #!/bin/sh
-exec tmux new-window "${@}"
+tmux new-window "${@}"
+tmux select-window -t :.-1
