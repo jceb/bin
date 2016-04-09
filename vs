@@ -1,3 +1,3 @@
 #!/bin/sh
-tmux split-window -h "${@}"
+tmux split-window -c '#{pane_current_path}' -h "${@}"
 tmux select-pane -t :.-1
