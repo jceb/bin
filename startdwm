@@ -40,6 +40,13 @@ if [ ! -e '/etc/X11/Xsession.d/90x11-common_ssh-agent' ]; then
     eval $(ssh-agent)
 fi
 
+if [ -e "${HOME}/.Xkbmap" ]; then
+    setxkbmap $(cat "${HOME}/.Xkbmap")
+fi
+if [ -e "${HOME}/.Xmodmap" ]; then
+    xmodmap $(cat "${HOME}/.Xmodmap")
+fi
+
 # start window manager
 # if test -e "${HOME}/.Xresources"; then
 # 	xrdb "$HOME/.Xresources"
