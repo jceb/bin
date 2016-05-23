@@ -1,2 +1,2 @@
 #!/bin/sh
-exec vserver "$@"
+VMUX_DEFAULT_EDITOR=vim exec vmux "$@"

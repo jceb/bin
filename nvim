@@ -1,2 +1,2 @@
 #!/bin/sh
-exec nserver "$@"
+VMUX_DEFAULT_EDITOR=nvim exec vmux "$@"
