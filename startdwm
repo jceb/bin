@@ -27,7 +27,7 @@ export QT_QPA_PLATFORMTHEME=qt5ct
 # imlibsetroot -x e -s /usr/share/archlinux/wallpaper/arch_paint_2_1920x1080.png
 
 # enable natural scrolling
-xinput | awk -F = '/slave  pointer/ {gsub(/\s.*/, "", $2); system("xinput set-prop " $2 " 282 1")}'
+enable-naturalscrolling
 
 # update mouse pointer
 xsetroot -cursor_name left_ptr
