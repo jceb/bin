@@ -34,12 +34,36 @@
 set -u
 set -e
 
+if [ $# -ge 1 ] && ([ "${1}" = '-h' ] || [ "${1}" = '--help' ]); then
+    echo -e "$(basename "${0}") [-v] [0|1]\n\tEnable (1, default) or disable (0) natural scrolling\n\t-v Verbose output"
+    exit
+fi
+
+verbose=
+if [ $# -ge 1 ] && [ "${1}" = '-v' ]; then
+    verbose=1
+    shift
+fi
+
+action=1
+if [ $# -ge 1 ] && [ "${1}" = '0' ]; then
+    action=0
+fi
+
 # list all input devices: xinput
 # list properties of input device: xinput list-props <ID>
 # set property: xinput set-prop <ID> <PROP_ID> <VALUE>
-xinput | awk -F = '/slave  pointer/ {gsub(/\s.*/, "", $2); print($2)}' | while read id; do
-    prop_id="$(xinput list-props "${id}" | grep 'Natural Scrolling Enabled (' | sed -e 's/.*(\([0-9]*\)):.*/\1/')"
+
+
+xinput | sed -ne 's/.*id=\([0-9]\+\).*\[slave \+pointer.*/\1/p' | while read id; do
+    if [ -n "${verbose}" ]; then
+        echo "Considering device $(xinput list-props ${id} | sed -ne '1s/Device //;s/:$//p') (${id})"
+    fi
+    prop_id="$(xinput list-props "${id}" | grep 'Natural Scrolling Enabled (' | sed -e 's/.*(\([0-9]\+\)):.*/\1/')"
     if [ -n "${prop_id}" ]; then
-        xinput set-prop "${id}" "${prop_id}" 1
+        echo "Enabling natural scrolling (${prop_id})."
+        xinput set-prop "${id}" "${prop_id}" "${action}"
+    elif [ -n "${verbose}" ]; then
+        echo 'Natural scrolling not available.'
     fi
 done
