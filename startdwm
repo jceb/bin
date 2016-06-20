@@ -52,6 +52,7 @@ fi
 
 # set screensaver to start after 10 minutes
 xset s $((10*60))
+xset s on
 
 # turn bell off
 xset b off
