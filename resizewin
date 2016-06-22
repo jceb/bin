@@ -7,4 +7,4 @@ if [ $# -lt 1 ]; then
 else
 	size="$@"
 fi
-xdotool windowsize "$(xdotool selectwindow)" ${size}
+xdotool selectwindow -- windowsize %@ ${size}
