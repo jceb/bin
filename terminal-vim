@@ -1,2 +1,0 @@
-#!/bin/bash
-exec x-terminal-emulator -e vim "$@"
