@@ -67,7 +67,7 @@ xset r rate 350 30
 dwm &
 
 # autostart programs
-dex -a
+dex -a -e DWM
 
 # everything has been started, wait here for dwm to terminate
 wait %1
