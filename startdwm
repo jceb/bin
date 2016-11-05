@@ -50,16 +50,6 @@ if [ -e "${HOME}/.Xmodmap" ]; then
     xmodmap $(cat "${HOME}/.Xmodmap")
 fi
 
-# set screensaver to start after 10 minutes
-xset s $((10*60))
-xset s on
-
-# turn bell off
-xset b off
-
-# set repeat settings
-xset r rate 350 30
-
 # start window manager
 # if test -e "${HOME}/.Xresources"; then
 # 	xrdb "$HOME/.Xresources"
@@ -68,6 +58,16 @@ dwm &
 
 # autostart programs
 dex -a -e DWM
+
+# set screensaver to start after 10 minutes
+xset s $((10*60))
+xset s on
+
+# set repeat settings
+xset r rate 350 30
+
+# turn bell off
+xset b off
 
 # everything has been started, wait here for dwm to terminate
 wait %1
