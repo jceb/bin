@@ -1,0 +1,19 @@
+#!/bin/bash
+# extract URLs from current tmux pane, select one via fzf and copy it into
+# clipboard
+set -e
+set -u
+if [[ -z "${TMUX}" ]]; then
+    echo "Error: tmux isn't running." 1>&2
+    exit 1
+fi
+
+regexp_url='[[:alpha:]]+:///?[^[:space:]]+[^][()⟩{}:[:space:]]'
+regexp_file='[./[:alpha:]]+/[./[:alpha:]]*'
+
+# -S -
+if [[ $# -ge 1 ]] && [[ "$1" = "-f" ]]; then
+    (tmux capture-pane && tmux save-buffer - | grep -o -E "${regexp_file}" | grep -v -E "${regexp_url}" | sort | uniq | FZF_DEFAULT_OPTS="${FZF_DEFAULT_OPTS} -0" fzf-tmux -d"${FZF_TMUX_HEIGHT:-40%}" | tr -d '\n' | xsel -i) &>/dev/null
+else
+    (tmux capture-pane && tmux save-buffer - | grep -o -E "${regexp_url}" | sort | uniq | FZF_DEFAULT_OPTS="${FZF_DEFAULT_OPTS} -0" fzf-tmux -d"${FZF_TMUX_HEIGHT:-40%}" | tr -d '\n' | xsel -i) &>/dev/null
+fi
