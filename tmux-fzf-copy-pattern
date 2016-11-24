@@ -8,8 +8,8 @@ if [[ -z "${TMUX}" ]]; then
     exit 1
 fi
 
-regexp_url='[[:alpha:]]+:///?[^[:space:]]+[^][()⟩{}:[:space:]]'
-regexp_file='[./[:alpha:]]+/[./[:alpha:]]*'
+regexp_url='[[:alnum:]]+:///?[^[:space:]]+[^][()⟩{}:[:space:]]'
+regexp_file='[-_./[:alnum:]]+/[-_./[:alnum:]]*'
 
 # -S -
 if [[ $# -ge 1 ]] && [[ "$1" = "-f" ]]; then
