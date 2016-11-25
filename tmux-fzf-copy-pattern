@@ -1,6 +1,7 @@
 #!/bin/bash
 # extract URLs from current tmux pane, select one via fzf and copy it into
 # clipboard
+set -x
 set -e
 set -u
 if [[ -z "${TMUX}" ]]; then
@@ -11,9 +12,23 @@ fi
 regexp_url='[[:alnum:]]+:///?[^[:space:]]+[^][()⟩{}:[:space:]]'
 regexp_file='[-_./[:alnum:]]+/[-_./[:alnum:]]*'
 
-# -S -
 if [[ $# -ge 1 ]] && [[ "$1" = "-f" ]]; then
+    # capture everything in this pane instead of only the visible part
+    # -S -
     (tmux capture-pane && tmux save-buffer - | grep -o -E "${regexp_file}" | grep -v -E "${regexp_url}" | sort | uniq | FZF_DEFAULT_OPTS="${FZF_DEFAULT_OPTS} -0" fzf-tmux -d"${FZF_TMUX_HEIGHT:-40%}" | tr -d '\n' | xsel -i) &>/dev/null
+elif [[ $# -ge 1 ]] && [[ "$1" = "-F" ]]; then
+    if [[ $# -ge 2 ]]; then
+        cd "${2}"
+        # :
+    fi
+    # tmux split-window bash
+    # PATH="${PATH}" FZF_DEFAULT_COMMAND="${FZF_DEFAULT_COMMAND}" fzf-tmux
+    # (FZF_DEFAULT_COMMAND="${FZF_DEFAULT_COMMAND}" FZF_DEFAULT_OPTS="${FZF_DEFAULT_OPTS} -0" fzf-tmux -d"${FZF_TMUX_HEIGHT:-40%}" | tr -d '\n' | xsel -i) &>/dev/null
+    if [[ -n "${FZF_DEFAULT_COMMAND}" ]]; then
+        (eval "${FZF_DEFAULT_COMMAND}" | FZF_DEFAULT_OPTS="${FZF_DEFAULT_OPTS} -0" fzf-tmux -d"${FZF_TMUX_HEIGHT:-40%}" | tr -d '\n' | xsel -i) &>/dev/null
+    else
+        (FZF_DEFAULT_OPTS="${FZF_DEFAULT_OPTS} -0" fzf-tmux -d"${FZF_TMUX_HEIGHT:-40%}" | tr -d '\n' | xsel -i) &>/dev/null
+    fi
 else
     (tmux capture-pane && tmux save-buffer - | grep -o -E "${regexp_url}" | sort | uniq | FZF_DEFAULT_OPTS="${FZF_DEFAULT_OPTS} -0" fzf-tmux -d"${FZF_TMUX_HEIGHT:-40%}" | tr -d '\n' | xsel -i) &>/dev/null
 fi
