@@ -42,3 +42,5 @@ setxkbmap $(cat ~/.Xkbmap)
 xmodmap ~/.Xmodmap
 
 xset r rate 350 30
+
+naturalscrolling
