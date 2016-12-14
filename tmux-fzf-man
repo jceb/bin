@@ -24,7 +24,7 @@ for i in ${MANPATH}; do
 done
 IFS="${OIFS}"
 
-manpage=$(find "${manpath[@]}" -type f -printf '%f\0' | sed -z -e 's/\.gz$//' | FZF_DEFAULT_OPTS="${FZF_DEFAULT_OPTS} -0 --read0" fzf-tmux -d"${FZF_TMUX_HEIGHT:-40%}")
+manpage=$(find "${manpath[@]}" -type f -printf '%f\0' | sed -z -e 's/\.gz$//' | FZF_DEFAULT_OPTS="${FZF_DEFAULT_OPTS} -0 --read0" fzf-tmux -r"${FZF_TMUX_HEIGHT:-50%}" || true)
 if [[ -n "${manpage}" ]]; then
     tmux split-window -c '#{pane_current_path}' -h "exec man ${manpage%%.*}"
 fi
