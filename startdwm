@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 # dwm startup script
 
 . ~/.zsh/rc/env.zsh
@@ -64,7 +64,7 @@ xset s $((10*60))
 xset s on
 
 # set repeat settings
-xset r rate 350 30
+xset r rate 300 30
 
 # turn bell off
 xset b off
