@@ -5,6 +5,7 @@ set -u
 SHORTCUTS="
 !ade
 !duden
+!d
 !g
 !gi
 !github
@@ -17,5 +18,5 @@ SHORTCUTS="
 !wde
 "
 
-query="$(echo "${SHORTCUTS}" | dmenu)"
+query="$(echo "${SHORTCUTS}" | sort | dmenu)"
 [ -n "${query}" ] && exec x-www-browser "https://duckduckgo.com/?q=${query}"
