@@ -1,3 +1,4 @@
 #!/bin/sh
-exec ipython3 notebook --no-mathjax
+# exec jupyter notebook --no-mathjax
+exec jupyter-notebook
 #--matplotlib=inline --pylab=inline
