@@ -63,9 +63,9 @@ xinput | sed -ne 's/.*id=\([0-9]\+\).*\[slave \+pointer.*/\1/p' | while read id;
     fi
     prop_id="$(xinput list-props "${id}" | grep 'Natural Scrolling Enabled (' | sed -ne 's/.*(\([0-9]\+\)):.*/\1/p')"
     if [ -n "${prop_id}" ]; then
-        echo "${action_verbose} natural scrolling (${prop_id})."
+        echo "${action_verbose} natural scrolling (${prop_id}) for device ${id}."
         xinput set-prop "${id}" "${prop_id}" "${action}"
-    elif [ -n "${verbose}" ]; then
+    else
         # workaround for synaptics touchpads
         prop_id="$(xinput list-props "${id}" | grep 'Synaptics Scrolling Distance (' | sed -ne 's/.*(\([0-9]\+\)):.*/\1/p')"
         if [ -n "${prop_id}" ]; then
@@ -77,7 +77,7 @@ xinput | sed -ne 's/.*id=\([0-9]\+\).*\[slave \+pointer.*/\1/p' | while read id;
                 if [ "${action}" = "1" ]; then
                     a="-"
                 fi
-                echo "${action_verbose} natural scrolling (${prop_id})."
+                echo "${action_verbose} natural scrolling (${prop_id}) for device ${id}."
                 xinput set-prop "${id}" "${prop_id}" "${a}${v1}" "${a}${v2}"
             elif [ -n "${verbose}" ]; then
                 echo 'Natural scrolling not available.'
