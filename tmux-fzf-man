@@ -2,29 +2,10 @@
 # query user for a manpage
 set -e
 set -u
-manpath=(
-/usr/share/man/man1
-/usr/share/man/man2
-/usr/share/man/man3
-/usr/share/man/man4
-/usr/share/man/man5
-/usr/share/man/man6
-/usr/share/man/man7
-/usr/share/man/man8
-)
 
-OIFS="${IFS}"
-IFS=:
-for i in ${MANPATH}; do
-    for (( j=1 ; j<=8 ; j+=1 )); do
-        if [[ -e "${i}/man${j}" ]]; then
-            manpath+=("${i}/man${j}")
-        fi
-    done
-done
-IFS="${OIFS}"
-
-manpage=$(find "${manpath[@]}" -type f -printf '%f\0' | sed -z -e 's/\.gz$//' | FZF_DEFAULT_OPTS="${FZF_DEFAULT_OPTS} -0 --read0" fzf-tmux -r"${FZF_TMUX_HEIGHT:-50%}" || true)
+manpage="$(man -k . | dmenu -l 10 || true)"
 if [[ -n "${manpage}" ]]; then
-    tmux split-window -c '#{pane_current_path}' -h "exec man ${manpage%%.*}"
+    section="$(awk '{gsub(/[()]/, "", $2); print $2}' <<< "${manpage}")"
+    page="$(echo "${manpage}" | awk '{print $1}')"
+    tmux split-window -c '#{pane_current_path}' -h "exec man "${section}" ${page}"
 fi
