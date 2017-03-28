@@ -1,0 +1,2 @@
+#!/bin/bash
+java -jar "${HOME}/.local/lib/java/plantuml.jar" -nbthread auto -failfast2 -tpng "$@"
