@@ -11,7 +11,7 @@ if [[ -z "${TMUX}" ]]; then
 fi
 
 regexp_url='[[:alnum:]]+:///?[^[:space:]]+[^][()⟩{}:[:space:]]'
-regexp_file='([-_./[:alnum:]]+/[-_./[:alnum:]]*|[-_.[:alnum:]]+\.[-_[:alnum:]]+)'
+regexp_file='([~-_./[:alnum:]]+/[-_./[:alnum:]]*|[-_.[:alnum:]]+\.[-_[:alnum:]]+)'
 
 if [[ $# -ge 1 ]] && [[ "$1" = "-f" ]]; then
     # capture everything in this pane instead of only the visible part
