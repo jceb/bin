@@ -1,6 +1,6 @@
 #!/bin/bash
 TERMINAL="st"
-SHELL="/bin/zsh"
+SHELL="/usr/bin/fish"
 
 # DEBUG
 # exec 1>/tmp/x 2>&1
@@ -51,4 +51,4 @@ else
 		command+=("-e" "${SHELL}" "-c" "${ENABLE_8_BIT} exec tmux ${session}")
 	fi
 fi
-TMUX= exec "${command[@]}"
+TMUX= SHELL="${SHELL}" exec "${command[@]}"
