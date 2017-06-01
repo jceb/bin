@@ -7,10 +7,20 @@
 from Xlib.display import Display
 from datetime import datetime
 import time
+import os
 
-r = Display().screen().root
+# SYM_M = u'📧'
+SYM_M = u'M'
+# TIMEFORMAT = u' 📆%V, %a %b %e %T %Y '
+TIMEFORMAT = u' W%V, %a %b %e %T %Y '
+MQ = os.path.expanduser(os.path.expandvars('~/.msmtp.queue/'))
+R = Display().screen().root
 
 while True:
-	r.set_wm_name(datetime.now().strftime(u' CW %V, %a %b %e %T %Y '))
-	r.get_wm_name()
+	m = ''
+	f = os.listdir(MQ)
+	if len(f):
+		m = u' %d%s' % (len(f), SYM_M)
+	R.set_wm_name(m + datetime.now().strftime(TIMEFORMAT))
+	R.get_wm_name()
 	time.sleep(1)
