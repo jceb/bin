@@ -4,8 +4,8 @@ set -u
 
 SHORTCUTS="
 !ade
-!duden
 !d
+!duden
 !g
 !gi
 !github
@@ -14,6 +14,7 @@ SHORTCUTS="
 !osm
 !thesaurus
 !thesaurusde
+!utf8
 !w
 !wde
 "
