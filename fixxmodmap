@@ -46,9 +46,12 @@ xset s $((10*60))
 xset s on
 
 # set repeat settings
-xset r rate 350 30
+xset r rate 350 40
 
 # turn bell off
 xset b off
+
+# update mouse pointer
+xsetroot -cursor_name left_ptr
 
 naturalscrolling
