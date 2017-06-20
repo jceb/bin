@@ -17,11 +17,11 @@ sub scan($$$)
 
 # http://
 
-      $hostchars+\.[a-z]+(:[0-9]+)?/
+      $hostchars+\.[a-z]+(:[0-9]+)?
 
 # www.tim.google.com/ - the [a-z].com is the main anchor for the whole regex - incase http:// is omitted
 
-      ($pathchars+/\?)*
+      (/$pathchars+)*
 
 # check for the index.php? part
 
