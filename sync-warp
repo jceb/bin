@@ -52,4 +52,7 @@ fi
 # ranger {{{1
 sed -ne 's/^\([a-zA-Z0-9]\)[a-zA-Z0-9]*:\(.*\)/\1:\2/p' > ~/.config/ranger/bookmarks < ~/.warprc
 
+# KDE {{{1
+# ~/.local/share/user-places.xbel
+
 # vi: ft=sh:tw=0:sw=4:ts=4:fdm=marker
