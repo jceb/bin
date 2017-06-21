@@ -23,7 +23,7 @@ export _JAVA_AWT_WM_NONREPARENTING="1"
 export QT_GRAPHICSSYSTEM=native
 export QT_QPA_PLATFORMTHEME=qt5ct
 # export XDG_CURRENT_DESKTOP=KDE
-export QT_AUTO_SCREEN_SCALE_FACTOR 0.8
+export QT_AUTO_SCREEN_SCALE_FACTOR=0.8
 
 # set wallpaper
 #display -window root $HOME/wallpaper0.jpg
