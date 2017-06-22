@@ -34,7 +34,7 @@ elif [[ $# -ge 1 ]] && ([[ "$1" = "-u" ]] || [[ "$1" = "-U" ]]); then
     cmd=(xsel -i)
     if [[ "$1" = "-U" ]]; then
         prompt='Open URL'
-        cmd=(xargs xdg-open)
+        cmd=(xargs x-www-browser)
     fi
     (tmux capture-pane && tmux save-buffer - | xurls | sort | uniq | dmenu -i -l 10 -p "${prompt}" | tr -d '\n' | "${cmd[@]}") &>/dev/null || true
 fi
