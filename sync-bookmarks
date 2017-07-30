@@ -86,7 +86,7 @@ def get_kde_bookmarks(bookmarks):
 					href=f'file://{directory}'
 				)
 			)
-		return ('~/.local/share/user-places.xbel', ET.tostring(tree, encoding='unicode'))
+		return ('~/.local/share/user-places.xbel', ET.tostring(tree, encoding=str, pretty_print=True))
 	# not yet implemented
 	raise NotImplemented('Bookmark file has to exists .. start KDE/a KDE app at least once!')
 
