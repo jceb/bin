@@ -1,2 +1,3 @@
 #!/bin/bash
+# Rust regex: https://doc.rust-lang.org/regex/regex/index.html
 command rg -i -o -e '[A-Za-z]+:///?[^/\s:]+(:[0-9]+)?(/[^\s]*[^)])?'
