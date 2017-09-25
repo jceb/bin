@@ -9,7 +9,11 @@ get_current_branch() {
 get_file_path() {
     # $1: file:line_number or directory
     if [ ${#} -ge 1 ]; then
-        echo "${1}" | sed -s 's/:\([0-9]\+\)$/#L\1/'
+        cd "$(dirname "${1}")"
+        filename="$(basename "${1}" | sed -e 's/:\([0-9]\+\)$//')"
+        linnr="$(basename "${1}" | sed -ne 's/.*:\([0-9]\+\)$/#L\1/p')"
+        filepath="$(git ls-tree --full-name --name-only HEAD "${filename}")"
+        echo "${filepath}${linnr}"
     fi
 }
 
