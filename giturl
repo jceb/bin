@@ -1,0 +1,44 @@
+#!/bin/sh
+set -e
+set -u
+
+get_current_branch() {
+    git rev-parse --abbrev-ref HEAD
+}
+
+get_file_path() {
+    # $1: file:line_number or directory
+    if [ ${#} -ge 1 ]; then
+        echo "${1}" | sed -s 's/:\([0-9]\+\)$/#L\1/'
+    fi
+}
+
+get_remote_url() {
+    # $1: branch name
+    if [ ${#} -ne 1 ]; then
+        return 1
+    fi
+    remote=$(git config "branch.${1}.remote")
+    if [ -n "${remote}" ]; then
+        git config "remote.${remote}.url" | sed -e '/^git@/s/:/\//'
+    fi
+}
+
+transform_url() {
+    # $1: url
+    if [ ${#} -ne 1 ]; then
+        return 1
+    fi
+    echo "${1}" | sed -e 's/^git@/https:\/\//' -e 's/\.git$//'
+}
+
+
+if [ ${#} -ge 1 ] && ([ "${1}" = "-h" ] || [ "${1}" = "--help" ]); then
+    echo "USAGE: $(basename "${0}") [FILE[:LINE_NUMBER]|DIRECTORY]"
+    echo "This will print the github/gitlab URL to the file or directory"
+fi
+
+branch="$(get_current_branch)"
+remote_url="$(get_remote_url "${branch}")"
+transformed_url="$(transform_url "${remote_url}")"
+echo "${transformed_url}/tree/${branch}/$(get_file_path "${@}")"
