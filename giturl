@@ -36,6 +36,7 @@ transform_url() {
 if [ ${#} -ge 1 ] && ([ "${1}" = "-h" ] || [ "${1}" = "--help" ]); then
     echo "USAGE: $(basename "${0}") [FILE[:LINE_NUMBER]|DIRECTORY]"
     echo "This will print the github/gitlab URL to the file or directory"
+    exit
 fi
 
 branch="$(get_current_branch)"
