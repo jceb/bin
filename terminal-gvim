@@ -1,2 +1,2 @@
 #!/bin/bash
-exec x-terminal-emulator -e VMUX_EDITOR=nvim VMUX_GLOBAL=1 exec vmux "$@"
+VMUX_EDITOR=nvim VMUX_GLOBAL=1 exec x-terminal-emulator vmux "$@"

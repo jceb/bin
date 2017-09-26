@@ -1,4 +1,5 @@
 #!/bin/bash
+# start a new terminal and open tmux in it
 TERMINAL="st"
 SHELL="/usr/bin/fish"
 
@@ -7,48 +8,43 @@ SHELL="/usr/bin/fish"
 # echo "${@}"
 # set -x
 
-# tput smm enables 8 bit shell input
-# ENABLE_8_BIT="tput smm;"
-ENABLE_8_BIT=""
-
 command=("${TERMINAL}")
 
-#first_session="$(tmux list-sessions | sed -n -e '1s/:.*//p')"
 first_detached_session="$(tmux list-sessions | grep -v '(attached)$' | sed -n -e '1s/:.*//p')"
+
 if [ $# -eq 0 ] && [ -n "${first_detached_session}" ] ; then
-    command+=("-e" "${SHELL}" "-c" "${ENABLE_8_BIT} exec tmux attach-session -t '${first_detached_session}'")
-#elif [ -z "${@}" ] && [ -n "${first_session}" ] ; then
-#	exec "${TERMINAL}" -e "${SHELL}" -c "tput smm; exec tmux attach-session -t '${first_session}'"
+    # reattach first detached session
+    command+=('-e' "${SHELL}" '-c' 'tmux' 'attach-session' '-t' "${first_detached_session}")
 else
-	session="new-session"
+    session='new-session'
 
-	# specify the window's class
-	if [ "${1}" = '-c' ]; then
-		command+=("-c" "${2}")
-		shift 2
-	fi
+    # specify the window's class
+    # if [ "${1}" = '-c' ]; then
+    #     command+=('-c' "${2}")
+    #     shift 2
+    # fi
 
-	# attach a specifc tmux session
-	if [ "${1}" = '-s' ]; then
-		sessionname="${2}"
-		shift 2
-		if tmux has-session -t "${sessionname}"; then
-			session="attach-session -t '${sessionname}'"
-		else
-			session="new-session -s '${sessionname}'"
-		fi
-	fi
+    # tmux shell
+    command+=('-e' tmux)
 
-	# strip -e, all following commands will be handed to tmux' new-session
-	if [ "${1}" = '-e' ]; then
-		shift 1
-	fi
+    # attach a specifc tmux session
+    if [ "${1}" = '-s' ]; then
+        sessionname="${2}"
+        shift 2
+        if tmux has-session -t "${sessionname}"; then
+            command+=('attach-session' '-t' "${sessionname}")
+        else
+            command+=('new-session' '-s' "${sessionname}")
+        fi
+    else
+        command+=('new-session')
+    fi
 
-	# start a new session
-	if [ $# -ge 1 ]; then
-		command+=("-e" "${SHELL}" "-c" "${ENABLE_8_BIT} exec tmux ${session} '${*}'")
-	else
-		command+=("-e" "${SHELL}" "-c" "${ENABLE_8_BIT} exec tmux ${session}")
-	fi
+    # strip -e, all following parameters will be handed to tmux' new-session
+    if [ "${1}" = '-e' ]; then
+        shift 1
+    fi
+    command+=("${@}")
 fi
+
 TMUX= SHELL="${SHELL}" exec "${command[@]}"
