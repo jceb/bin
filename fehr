@@ -3,7 +3,14 @@
 # the current directory
 cmd=(exec feh)
 if [ $# -eq 1 ]; then
-    cmd+=(--start-at "${1}" --magick-timeout 0.5 "$(dirname "${1}")")
+    dir=
+    if [ ! -d "${1}" ]; then
+        dir="$(dirname "${1}")"
+        cmd+=(--start-at "${1}")
+    else
+        dir="${1}"
+    fi
+    cmd+=(--magick-timeout 0.5 "${dir}")
 else
     cmd+=("${@}")
 fi
