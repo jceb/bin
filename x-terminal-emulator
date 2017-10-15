@@ -1,6 +1,7 @@
 #!/bin/bash
 # start a new terminal and open tmux in it
-TERMINAL="st"
+# TERMINAL="st"
+TERMINAL="alacritty"
 SHELL="/usr/bin/fish"
 
 # DEBUG
