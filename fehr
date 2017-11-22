@@ -20,5 +20,4 @@ if [ $# -eq 1 ]; then
 else
     cmd+=("${@}")
 fi
-echo "${cmd[@]}"
 "${cmd[@]}"
