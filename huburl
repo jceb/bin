@@ -64,11 +64,10 @@ build_full_url() { # build URL full including file or directory
     if [ ${#} -ne 3 ]; then
         return 1
     fi
-    if [ "${2}" = 'master' ]; then
-        # abbreviate URL to master branch because it's the default branch
-        path="${3}"
-    else
+    if test -d "${3}"; then
         path="tree/${2}/${3}"
+    else
+        path="blob/${2}/${3}"
     fi
     echo "${1}/${path}"
 }
