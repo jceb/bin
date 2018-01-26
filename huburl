@@ -64,7 +64,7 @@ build_full_url() { # build URL full including file or directory
     if [ ${#} -ne 3 ]; then
         return 1
     fi
-    if test -d "${3}"; then
+    if [ -z "${3}" ] || test -d "${3}"; then
         path="tree/${2}/${3}"
     else
         path="blob/${2}/${3}"
