@@ -11,5 +11,5 @@ else
 	tmux new-session -d -s yeah
 	# tmux new-session -d -s yeah -n imap offlineimap
 	# tmux new-window -n irc weechat-curses
-	exec yeahtmux
+	exec "${0}"
 fi
