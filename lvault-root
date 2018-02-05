@@ -1,0 +1,3 @@
+#!/bin/bash
+set -e
+lvault-auth ~/.config/vault/keys/r.gpg

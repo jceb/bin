@@ -3,6 +3,5 @@ set -e
 set -u
 
 for i in $(seq 1 5); do
-	# lvault operator unseal "$(gpg -dq ~/.config/vault/keys/${i}.gpg 2>/dev/null)"
-	lvault unseal "$(gpg -dq ~/.config/vault/keys/${i}.gpg 2>/dev/null)"
+	lvault operator unseal "$(gpg -dq ~/.config/vault/keys/${i}.gpg 2>/dev/null)"
 done
