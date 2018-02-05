@@ -1,0 +1,7 @@
+#!/bin/sh
+set -e
+set -u
+
+for i in $(seq 1 5); do
+	lvault unseal "$(gpg -dq ~/.config/vault/keys/${i}.gpg 2>/dev/null)"
+done

@@ -1,0 +1,5 @@
+#!/bin/sh
+set -e
+set -u
+
+gpg -dq ~/.config/vault/keys/r.gpg  | lvault auth -

@@ -1,0 +1,4 @@
+#!/bin/bash
+lvault-server &
+sleep 2
+lvault-unseal
