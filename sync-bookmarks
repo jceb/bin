@@ -37,7 +37,7 @@ def make_directories(path):
 
 
 def write_file(file, content):
-	if os.path.exists(file):
+	if os.path.exists(expand_path(file)):
 		with open(expand_path(file), 'w') as f:
 			f.write(content)
 			return True
@@ -120,3 +120,5 @@ if __name__ == '__main__':
 		get_ranger_bookmarks,
 		get_kde_bookmarks)
 	)
+
+# vi: ft=python:tw=80:sw=4:ts=4:sts=4:noet
