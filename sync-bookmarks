@@ -37,9 +37,10 @@ def make_directories(path):
 
 
 def write_file(file, content):
-	with open(expand_path(file), 'w') as f:
-		f.write(content)
-		return True
+	if os.path.exists(file):
+		with open(expand_path(file), 'w') as f:
+			f.write(content)
+			return True
 	return False
 
 
@@ -101,7 +102,8 @@ def get_kde_bookmarks(bookmarks):
 			)
 		return ('~/.local/share/user-places.xbel', ET.tostring(tree, encoding=str, pretty_print=True))
 	# not yet implemented
-	raise NotImplemented('Bookmark file has to exists .. start KDE/a KDE app at least once!')
+	# raise NotImplemented('Bookmark file has to exist .. start KDE/a KDE app at least once!')
+	return ('~/.local/share/user-places.xbel', '')
 
 
 def sync_bookmarks(bookmarks, bookmark_generators):
