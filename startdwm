@@ -18,6 +18,7 @@ export QT_XFT=true
 
 export AWT_TOOLKIT="MToolkit"
 export _JAVA_AWT_WM_NONREPARENTING="1"
+export _JAVA_OPTIONS='-Dawt.useSystemAAFontSettings=gasp'
 
 # somehow the graphics system seems to be broken with current versions of QT
 export QT_GRAPHICSSYSTEM=native
