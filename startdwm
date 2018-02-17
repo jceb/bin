@@ -23,15 +23,11 @@ export _JAVA_OPTIONS='-Dawt.useSystemAAFontSettings=gasp'
 # somehow the graphics system seems to be broken with current versions of QT
 export QT_GRAPHICSSYSTEM=native
 export QT_QPA_PLATFORMTHEME=qt5ct
-# export XDG_CURRENT_DESKTOP=KDE
-export QT_AUTO_SCREEN_SCALE_FACTOR=0.8
-
-# set wallpaper
-#display -window root $HOME/wallpaper0.jpg
-#(DISPLAY=${DISPLAY}.1 display -window root $HOME/wallpaper1.jpg) &
-#DISPLAY=${DISPLAY}.1 habak -hi $HOME/wallpaper1.jpg -mc 90,90,90,200 -mh 20 -mp 10,850 -mf /usr/share/fonts/truetype/msttcorefonts/Trebuchet_MS.ttf -ht "`verse`"
-#habak -hi $HOME/wallpaper0.jpg -mc 90,90,90,200 -mh 20 -mp 10,850 -mf /usr/share/fonts/truetype/msttcorefonts/Trebuchet_MS.ttf -ht "`verse`"
-# imlibsetroot -x e -s /usr/share/archlinux/wallpaper/arch_paint_2_1920x1080.png
+# disable autoscaling
+export QT_AUTO_SCREEN_SCALE_FACTOR=0
+export XDG_CONFIG_DIRS=/etc/xdg
+# export XDG_CURRENT_DESKTOP=XFCE
+export XDG_DATA_DIRS=/usr/local/share:/usr/share
 
 # start the gpg-agent
 if [ ! -e '/etc/X11/Xsession.d/90gpg-agent' ]; then
