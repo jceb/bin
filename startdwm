@@ -23,6 +23,7 @@ export _JAVA_OPTIONS='-Dawt.useSystemAAFontSettings=gasp'
 # somehow the graphics system seems to be broken with current versions of QT
 export QT_GRAPHICSSYSTEM=native
 export QT_QPA_PLATFORMTHEME=qt5ct
+# export QT_QPA_PLATFORM_PLUGIN_PATH=/usr/lib
 # disable autoscaling
 export QT_AUTO_SCREEN_SCALE_FACTOR=0
 export XDG_CONFIG_DIRS=/etc/xdg
