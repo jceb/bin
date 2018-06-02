@@ -37,9 +37,13 @@ setxkbmap -option
 # look at /usr/share/X11/xkb/rules/base.lst
 # for grp:ctrls_toggle see also https://bugs.freedesktop.org/show_bug.cgi?id=15843
 # /usr/share/X11/xkb/symbols/group
-setxkbmap $(cat ~/.Xkbmap)
+if [ -e "${HOME}/.Xkbmap" ]; then
+    setxkbmap $(cat "${HOME}/.Xkbmap")
+fi
+if [ -e "${HOME}/.Xmodmap" ]; then
+    xmodmap "${HOME}/.Xmodmap"
+fi
 
-xmodmap ~/.Xmodmap
 
 # set screensaver to start after 10 minutes
 xset s $((10*60))
