@@ -41,24 +41,19 @@ if [ ! -e '/etc/X11/Xsession.d/90x11-common_ssh-agent' ]; then
     eval $(ssh-agent)
 fi
 
-if [ -e "${HOME}/.Xkbmap" ]; then
-    setxkbmap $(cat "${HOME}/.Xkbmap")
-fi
-if [ -e "${HOME}/.Xmodmap" ]; then
-    xmodmap "${HOME}/.Xmodmap"
-fi
-
-# start window manager
+# load Xresources in case the X11 configuration doesn't do it
 # if test -e "${HOME}/.Xresources"; then
 # 	xrdb "$HOME/.Xresources"
 # fi
 
+# set keymap aso.
+fixxmodmap
+
+# start window manager
 dwm &
 
 # autostart programs
 dex -a -e DWM
-
-fixxmodmap
 
 # everything has been started, wait here for dwm to terminate
 wait %1 || true
