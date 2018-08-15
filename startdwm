@@ -51,6 +51,7 @@ fixxmodmap
 
 # start window manager
 dwm &
+# xmonad &
 
 # autostart programs
 dex -a -e DWM
