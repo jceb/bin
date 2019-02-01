@@ -29,4 +29,6 @@ xset b off
 # update mouse pointer
 xsetroot -cursor_name left_ptr
 
+touchpad
+
 naturalscrolling
