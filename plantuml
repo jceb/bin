@@ -1,4 +1,6 @@
 #!/bin/bash
 # Downloaded from http://plantuml.com/
 # Direct download URL http://sourceforge.net/projects/plantuml/files/plantuml.jar/download
+set -e
+set -u
 java -jar "${HOME}/.local/lib/java/plantuml.jar" -nbthread auto -failfast2 -DDATE=$(date +%Y-%m-%d) "$@"
