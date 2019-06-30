@@ -15,14 +15,18 @@ def numberOfFilesAndDirectories(directory):
 
 
 TIMEFORMAT = u' 📆%V, %a %b %e %T %Y '
+TIMEFORMAT = u' CW%V, %a %b %e %T %Y '
 MQ = (u'⬆️', lambda: int(numberOfFilesAndDirectories(u'~/.msmtp.queue/') / 2))
+MQ = (u'>', lambda: int(numberOfFilesAndDirectories(u'~/.msmtp.queue/') / 2))
 MBOX = (u'📧', lambda: numberOfFilesAndDirectories(u'~/Documents/Mail/new')
+        + numberOfFilesAndDirectories(u'~/Documents/Mail/cur'))
+MBOX = (u'<', lambda: numberOfFilesAndDirectories(u'~/Documents/Mail/new')
         + numberOfFilesAndDirectories(u'~/Documents/Mail/cur'))
 SCREEN_ROOT = Display().screen().root
 
 while True:
     message = u''
-    for symbol, value_func in (MQ, MBOX):
+    for symbol, value_func in (MBOX, MQ):
         value = value_func()
         if value and value != "0":
             message += u' %s%d' % (symbol, value)
