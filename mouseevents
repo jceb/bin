@@ -1,0 +1,35 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+
+from functools import reduce
+from evdev import list_devices, InputDevice, ecodes, categorize
+import select
+import sys
+import os.path
+
+if len(sys.argv) < 2:
+    print(os.path.basename(sys.argv[0]), 'PATH_TO_DEVICE')
+    print('\nDevices:')
+    for device in [InputDevice(path) for path in list_devices()]:
+        print(device.path, device.name, device.phys, sep='\t')
+    print('\nIf you can\'t identify your mouse device, maybe a look at /dev/input/by-id/ will help.')
+    sys.exit(1)
+
+dev = InputDevice(sys.argv[1])
+
+timeline = {}
+
+try:
+    for event in dev.read_loop():
+        if event.type == ecodes.EV_REL:
+            timestamp = int(event.timestamp())
+            if timestamp not in timeline:
+                timeline[timestamp] = []
+            timeline[timestamp].append(event)
+            print(categorize(event), event.value)
+except KeyboardInterrupt:
+    pass
+
+print('Timestamp', 'Number of Events', 'Average movement', sep='\t')
+for timestamp in sorted(timeline):
+    print(timestamp, len(timeline[timestamp]), reduce(lambda x, y: x + y.value, timeline[timestamp], 0) / len(timeline[timestamp]), sep='\t')
