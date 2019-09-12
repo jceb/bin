@@ -16,7 +16,7 @@ if [ $# -eq 1 ]; then
     else
         dir="${1}"
     fi
-    cmd+=(--magick-timeout 0.5 "${dir}")
+    cmd+=(--conversion-timeout 0.5 "${dir}")
 else
     cmd+=("${@}")
 fi
