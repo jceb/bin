@@ -4,6 +4,7 @@
 # $3: jq value
 
 set -e
+set -u
 
 secret_file="$1"
 shift
