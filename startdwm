@@ -23,12 +23,14 @@ export _JAVA_AWT_WM_NONREPARENTING="1"
 export _JAVA_OPTIONS='-Dawt.useSystemAAFontSettings=gasp'
 
 # somehow the graphics system seems to be broken with current versions of QT
-export QT_GRAPHICSSYSTEM=native
+# export QT_GRAPHICSSYSTEM=native
+export QT_GRAPHICSSYSTEM=opengl
+# export QT_GRAPHICSSYSTEM=raster
 export QT_QPA_PLATFORMTHEME=qt5ct
-export QT_QPA_PLATFORM_PLUGIN_PATH=/usr/lib
+export QT_QPA_PLATFORM_PLUGIN_PATH=/usr/lib/qt/plugins
 # disable autoscaling
 export QT_AUTO_SCREEN_SCALE_FACTOR=0
-export XDG_CONFIG_DIRS=/etc/xdg
+# export XDG_CONFIG_DIRS=/etc/xdg
 # export XDG_CURRENT_DESKTOP=XFCE
 export XDG_DATA_DIRS=/usr/local/share:/usr/share
 
