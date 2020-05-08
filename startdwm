@@ -3,71 +3,29 @@
 
 echo "Starting dwm: $(date)"
 
-. ~/.zsh/rc/env.zsh
+set -a
+. ~/.config/environment.d/env.conf
+. ~/.config/environment.d/X.conf
+set +a
 
-set -x
-
-# enable ibus
-export GTK_IM_MODULE=ibus
-export QT_IM_MODULE=ibus
-export QT4_IM_MODULE=ibus
-export CLUTTER_IM_MODULE=ibus
-export XMODIFIERS=@im=ibus
-
-# force XFT
-export GDK_USE_XFT=1
-export QT_XFT=true
-
-export AWT_TOOLKIT="MToolkit"
-export _JAVA_AWT_WM_NONREPARENTING="1"
-export _JAVA_OPTIONS='-Dawt.useSystemAAFontSettings=gasp'
-
-# somehow the graphics system seems to be broken with current versions of QT
-# export QT_GRAPHICSSYSTEM=native
-export QT_GRAPHICSSYSTEM=opengl
-# export QT_GRAPHICSSYSTEM=raster
-export QT_QPA_PLATFORMTHEME=qt5ct
-export QT_QPA_PLATFORM_PLUGIN_PATH=/usr/lib/qt/plugins
-# disable autoscaling
-export QT_AUTO_SCREEN_SCALE_FACTOR=0
-# export XDG_CONFIG_DIRS=/etc/xdg
-# export XDG_CURRENT_DESKTOP=XFCE
-export XDG_DATA_DIRS=/usr/local/share:/usr/share
-
-# start the gpg-agent
-if [ ! -e '/etc/X11/Xsession.d/90gpg-agent' ]; then
-    if ! pgrep -U "${USER}" gpg-agent; then
-        eval $(gpg-agent --daemon)
-        export GPG_AGENT_INFO
-    fi
+# set environment variables for gpg and ssh agent
+if [ -z "${GPG_AGENT_INFO}" ]; then
+    export GPG_AGENT_INFO="/run/user/$(getent passwd jceb|awk -F: '{print $3}')/gnupg/S.gpg-agent"
+fi
+if [ -z "${SSH_AUTH_SOCK}" ]; then
+    export SSH_AUTH_SOCK="/run/user/$(getent passwd jceb|awk -F: '{print $3}')/gnupg/S.gpg-agent.ssh"
 fi
 
-# start ssh-agent
-if [ ! -e '/etc/X11/Xsession.d/90x11-common_ssh-agent' ]; then
-    if ! pgrep -U "${USER}" ssh-agent; then
-        eval $(ssh-agent)
-    fi
-fi
+# start window manager and autostart programs
 
-# load Xresources in case the X11 configuration doesn't do it
-# if test -e "${HOME}/.Xresources"; then
-# 	xrdb "$HOME/.Xresources"
-# fi
-
-# set keymap aso.
-fixxmodmap
-
-# start window manager
-# autostart programs
 # dwm &
 # dex -a -e DWM
+
 xmonad --recompile
 xmonad &
-dex -a -e XMONAD
+# dex -a -e XMONAD
+
+systemctl --user start autostart.target
 
 # everything has been started, wait here for dwm to terminate
 wait %1 || true
-
-# kill certain programs that survive the window manager's end
-killall gpg-agent &>/dev/null || true
-killall dbus-daemon &>/dev/null || true
