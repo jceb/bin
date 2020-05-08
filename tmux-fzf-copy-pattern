@@ -1,7 +1,12 @@
 #!/bin/bash
 # extract URLs from current tmux pane, select one via fzf and copy it into
 # clipboard
+
+# exec &> /tmp/x
+# date
 # set -x
+# echo $PATH
+
 set -e
 set -u
 set -o pipefail
