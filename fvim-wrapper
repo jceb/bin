@@ -1,0 +1,3 @@
+#!/bin/bash
+source ~/.zsh/rc/env.zsh
+exec fvim "$@"
