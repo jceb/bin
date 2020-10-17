@@ -10,10 +10,10 @@ set +a
 
 # set environment variables for gpg and ssh agent
 if [ -z "${GPG_AGENT_INFO}" ]; then
-    export GPG_AGENT_INFO="/run/user/$(getent passwd jceb|awk -F: '{print $3}')/gnupg/S.gpg-agent"
+    export GPG_AGENT_INFO="$(gpgconf --list-dirs agent-socket)"
 fi
 if [ -z "${SSH_AUTH_SOCK}" ]; then
-    export SSH_AUTH_SOCK="/run/user/$(getent passwd jceb|awk -F: '{print $3}')/gnupg/S.gpg-agent.ssh"
+    export SSH_AUTH_SOCK="$(gpgconf --list-dirs agent-ssh-socket)"
 fi
 
 # start window manager and autostart programs
