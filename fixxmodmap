@@ -1,5 +1,8 @@
 #!/bin/bash
 
+set -e
+set -u
+
 echo "Running fixxmodmap..."
 
 # clear configuration
@@ -9,9 +12,11 @@ setxkbmap -option
 # for grp:ctrls_toggle see also https://bugs.freedesktop.org/show_bug.cgi?id=15843
 # /usr/share/X11/xkb/symbols/group
 if [ -e "${HOME}/.Xkbmap" ]; then
+    echo setxkbmap $(cat "${HOME}/.Xkbmap")
     setxkbmap $(cat "${HOME}/.Xkbmap")
 fi
 if [ -e "${HOME}/.Xmodmap" ]; then
+    echo xmodmap "${HOME}/.Xmodmap"
     xmodmap "${HOME}/.Xmodmap"
 fi
 
@@ -29,6 +34,6 @@ xset b off
 # update mouse pointer
 xsetroot -cursor_name left_ptr
 
-touchpad
+touchpad || true
 
 naturalscrolling
