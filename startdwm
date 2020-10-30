@@ -1,7 +1,7 @@
 #!/bin/bash
 # dwm startup script
 
-echo "Starting dwm: $(date)"
+echo "Starting window manager: $(date)"
 
 set -a
 . ~/.config/environment.d/env.conf
@@ -17,13 +17,8 @@ if [ -z "${SSH_AUTH_SOCK}" ]; then
 fi
 
 # start window manager and autostart programs
-
-# dwm &
-# dex -a -e DWM
-
 xmonad --recompile
 xmonad &
-# dex -a -e XMONAD
 
 systemctl --user start autostart.target
 
