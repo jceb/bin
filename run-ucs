@@ -1,4 +1,7 @@
 #!/bin/sh
+# Open a shell in a UCS docker image.
+# List of tags: https://hub.docker.com/r/univention/ucs-generic-amd64/tags
+# Usage: run-ucs [DOCKER-TAG]
 set -e
 set -u
 
