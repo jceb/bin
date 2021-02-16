@@ -89,7 +89,7 @@ main() {
 
     if [ -d "${file}" ]; then
         cd "${file}"
-        file="."
+        file=""
     else
         cd "$(dirname "${file}")"
         file="$(basename "${file}")"
@@ -97,7 +97,7 @@ main() {
     branch="$(get_current_branch)"
     remote_url="$(get_remote_url "${branch}")"
     transformed_url="$(transform_url "${remote_url}")"
-    filepath="$(get_file_path "${file}")"
+    filepath="$(get_file_path "$(pwd)/${file}")"
     echo $(build_full_url "${transformed_url}" "${branch}" "${filepath}")
 }
 
