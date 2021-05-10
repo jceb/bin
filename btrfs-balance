@@ -1,0 +1,3 @@
+#!/bin/bash
+sudo btrfs fi balance /
+sudo btrfs fi balance /home
