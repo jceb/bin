@@ -1,0 +1,31 @@
+#!/bin/bash
+set -ueo pipefail
+
+USAGE="$(basename "$0") [dark|light]"
+
+if [ $# -ge 1 ] && ([ "$1" = "-h" ] || [ "$1" = "--help" ]); then
+    echo "${USAGE}"
+    exit 0
+fi
+
+if [ $# -ge 1 ]; then
+    if [ "${1}" = 'dark' ]; then
+        COLORSCHEME='dark'
+    else
+        COLORSCHEME='light'
+    fi
+else
+    COLORSCHEME="$(([ $(date +%H) -ge 7 ] && [ $(date +%H) -lt 18 ]) && echo light || echo dark)"
+fi
+
+echo "${COLORSCHEME}" > ~/.config/colorscheme
+
+tmux setenv -g COLORSCHEME "${COLORSCHEME}"
+tmux source ~/.tmux.conf
+
+# update alacritty colorscheme on demand
+if [ "${COLORSCHEME}" = 'light' ]; then
+    sed -i -e 's/^colors:.*/colors: *papercolor/' ~/.config/alacritty/alacritty.yml
+else
+    sed -i -e 's/^colors:.*/colors: *nord/' ~/.config/alacritty/alacritty.yml
+fi
