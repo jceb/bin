@@ -1,0 +1,17 @@
+#!/bin/sh
+# Open a shell in a UCS docker image.
+# List of tags: https://hub.docker.com/r/univention/ucs-generic-amd64/tags
+# Usage: run-ucs [DOCKER-TAG]
+set -e
+set -u
+
+VERSION="${1:-latest}"
+IMAGE="nixos/nix"
+
+echo "Running ${IMAGE}:${VERSION}"
+
+if ! docker image inspect "${IMAGE}:${VERSION}" &>/dev/null; then
+    docker image pull "${IMAGE}:${VERSION}"
+fi
+
+exec docker run -t -i --rm -w /app --mount type=bind,src=$PWD,dst=/app "${IMAGE}:${VERSION}" /bin/sh
