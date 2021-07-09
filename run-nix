@@ -1,11 +1,11 @@
 #!/bin/bash
-# Open a shell in a UCS docker image.
-# List of tags: https://hub.docker.com/r/univention/ucs-generic-amd64/tags
-# Usage: run-ucs [DOCKER-TAG]
+# Open a shell in a Nix docker image.
+# Usage: run-nix
 set -e
 set -u
+set -o pipefail
 
-export IMAGE="nixos/nix"
+export IMAGE="nixos/nix:latest"
 export CMD="/bin/sh"
 
 exec run-ucs "$@"
