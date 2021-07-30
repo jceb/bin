@@ -15,11 +15,13 @@ if [ $# -ge 1 ]; then
         COLORSCHEME='light'
     fi
 else
-    COLORSCHEME="$(([ $(date +%H) -ge 7 ] && [ $(date +%H) -lt 18 ]) && echo light || echo dark)"
+    COLORSCHEME="$(([ $(date +%k) -ge 7 ] && [ $(date +%k) -lt 18 ]) && echo light || echo dark)"
 fi
 
 echo "${COLORSCHEME}" > ~/.config/colorscheme
 
+# tmate setenv -g COLORSCHEME "${COLORSCHEME}"
+# tmate source ~/.tmux.conf
 tmux setenv -g COLORSCHEME "${COLORSCHEME}"
 tmux source ~/.tmux.conf
 
