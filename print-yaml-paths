@@ -1,4 +1,10 @@
 #!/usr/bin/env -S deno run --allow-read --allow-net
+// Script prints paths that are in YAML files. The main purpose it so quickly
+// fetch the correct path to create a JSON Patch in kustomize.
+// Usage:
+// cat myfile.yaml | print-yaml-paths
+// print-yaml-paths myfile.yaml
+
 import { parseAll } from "https://deno.land/std@0.103.0/encoding/yaml.ts";
 import { readAllSync } from "https://deno.land/std@0.103.0/io/util.ts";
 import S from "https://cdn.skypack.dev/sanctuary";
@@ -32,9 +38,10 @@ const objectToPath = (path) => (o) => {
     ])(o);
   } else {
     const path_sep = "/";
+    const str = new String(o);
     console.log(
       `${path_sep}${S.joinWith(path_sep)(path)} # ${
-        new String(o).slice(0, 20) + (new String(o).length >= 20 ? "..." : "")
+        str.slice(0, 20) + (str.length >= 20 ? "..." : "")
       }`
     );
   }
@@ -51,9 +58,7 @@ S.pipe([
     if (S.snd(p).rid) {
       Deno.close(S.snd(p).rid);
     }
-    // console.log(new TextDecoder().decode(contents));
     return S.Pair(S.fst(p))(parseAll(new TextDecoder().decode(contents)));
-    // return S.Pair(S.fst(p))(parseAll(contents));
   }),
   S.map((p) => {
     console.log(`# file: ${S.fst(p)}`);
