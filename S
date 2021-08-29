@@ -1,14 +1,2 @@
-#!/usr/bin/env bash
-set -euo pipefail
-
-cat <<EOF
-// Sanctuary only:
-let S; import("https://cdn.skypack.dev/sanctuary").then(l => { S=l.default; });
-
-// Fluture + Sanctuary integration:
-import("https://cdn.skypack.dev/fluture-sanctuary-types").then(l => { S = S.create({checkTypes: true, env: S.env.concat(l.env)}); });
-let F; import("https://cdn.skypack.dev/fluture").then(l => { F=l; });
-
-EOF
-
-deno
+#!/bin/bash
+deno repl --eval 'import {S, $, F} from "https://deno.land/x/sanctuary_cheat_sheet/repl.js"'
