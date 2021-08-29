@@ -20,18 +20,20 @@ fi
 
 echo "${COLORSCHEME}" > ~/.config/colorscheme
 
+# update alacritty and k9s colorscheme on demand
+rm -f ~/.k9s/skin.yml
+if [ "${COLORSCHEME}" = 'light' ]; then
+    # sed -i -e 's/^colors:.*/colors: *papercolor/' ~/.config/alacritty/alacritty.yml
+    sed -i -e 's/^colors:.*/colors: *tokyoday/' ~/.config/alacritty/alacritty.yml
+    ln -s ~/.k9s/solarized_light.yml ~/.k9s/skin.yml
+else
+    # sed -i -e 's/^colors:.*/colors: *nord/' ~/.config/alacritty/alacritty.yml
+    sed -i -e 's/^colors:.*/colors: *tokyostorm/' ~/.config/alacritty/alacritty.yml
+    ln -s ~/.k9s/nord.yml ~/.k9s/skin.yml
+fi
+
 # tmate setenv -g COLORSCHEME "${COLORSCHEME}"
 # tmate source ~/.tmux.conf
 tmux setenv -g COLORSCHEME "${COLORSCHEME}"
 tmux source ~/.tmux.conf
-
-# update alacritty and k9s colorscheme on demand
-rm -f ~/.k9s/skin.yml
-if [ "${COLORSCHEME}" = 'light' ]; then
-    sed -i -e 's/^colors:.*/colors: *papercolor/' ~/.config/alacritty/alacritty.yml
-    ln -s ~/.k9s/solarized_light.yml ~/.k9s/skin.yml
-else
-    sed -i -e 's/^colors:.*/colors: *nord/' ~/.config/alacritty/alacritty.yml
-    ln -s ~/.k9s/nord.yml ~/.k9s/skin.yml
-fi
 
