@@ -20,9 +20,8 @@ if [ -e "${HOME}/.Xmodmap" ]; then
     xmodmap "${HOME}/.Xmodmap"
 fi
 
-
 # set screensaver to start after 10 minutes
-xset s $((10*60))
+xset s $((10 * 60))
 xset s on
 
 # set repeat settings
@@ -37,3 +36,14 @@ xsetroot -cursor_name left_ptr
 touchpad || true
 
 naturalscrolling
+
+# assign wacom tablet to the third screen
+xsetwacom --set "HUION Huion Tablet Pen stylus" MapToOutput HDMI-1 | true
+xsetwacom --set "HUION Huion Tablet Pad pad" MapToOutput HDMI-1 | true
+xsetwacom --set "Wacom One by Wacom M Pen stylus" MapToOutput HDMI-1 | true
+xsetwacom --set "Wacom One by Wacom M Pen eraser" MapToOutput HDMI-1 | true
+# Rotate 180 degree:
+# xsetwacom --set "Wacom One by Wacom M Pen stylus" Rotate none | true
+# xsetwacom --set "Wacom One by Wacom M Pen eraser" Rotate none | true
+# xsetwacom --set "Wacom One by Wacom M Pen stylus" Rotate half | true
+# xsetwacom --set "Wacom One by Wacom M Pen eraser" Rotate half | true
