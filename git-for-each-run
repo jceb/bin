@@ -1,0 +1,25 @@
+#!/bin/bash
+set -euo pipefail
+
+JOBS="${JOBS:-8}"      # set this to the number of parallel jobs, only works if xargs or parallel are installed - attention, output of the commands will be interlaced / mixed for xargs
+CMD="${CMD:-}"         # set this to the command that shall be executed
+VERBOSE="${VERBOSE:-}" # set this to 1
+V=
+if [ "${VERBOSE}" = "1" ]; then
+    V="-t"
+fi
+
+if type parallel &>/dev/null; then
+    find . -type d -name .git -printf '%h\n' | parallel "-j${JOBS}" ${V} -k sh -eo pipefail -c "echo && cd {} && echo {} && ${CMD} $@"
+elif type xargs &>/dev/null; then
+    find . -type d -name .git -printf '%h\n' | xargs -I {} ${V} "-P${JOBS}" sh -eo pipefail -c "echo && cd {} && echo {} && ${CMD} $@"
+else
+    find . -type d -name .git -printf '%h\n' | while read d; do
+        (
+            [ "${VERBOSE}" = "1" ] && set -x || true
+            cd "${d}"
+            echo "${d}"
+            ${CMD} "$@"
+        )
+    done
+fi
