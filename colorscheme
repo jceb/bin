@@ -1,5 +1,5 @@
 #!/bin/bash
-set -ueo pipefail
+# set -ueo pipefail
 
 USAGE="$(basename "$0") [dark|light]"
 
@@ -15,10 +15,17 @@ if [ $# -ge 1 ]; then
         COLORSCHEME='light'
     fi
 else
-    COLORSCHEME="$(([ $(date +%k) -ge 7 ] && [ $(date +%k) -lt 18 ]) && echo light || echo dark)"
+    if [ "$(redshift -p 2>/dev/null | awk '/Period:/ {print $2}')" = "Daytime" ]; then
+        COLORSCHEME='light'
+    else
+        # stay in dark mode during the transition time
+        COLORSCHEME='dark'
+    fi
+
+    # COLORSCHEME="$(([ $(date +%k) -ge 7 ] && [ $(date +%k) -lt 18 ]) && echo light || echo dark)"
 fi
 
-echo "${COLORSCHEME}" > ~/.config/colorscheme
+echo "${COLORSCHEME}" >~/.config/colorscheme
 
 # update alacritty and k9s colorscheme on demand
 rm -f ~/.config/k9s/skin.yml
@@ -37,4 +44,3 @@ fi
 # tmate source ~/.tmux.conf
 tmux setenv -g COLORSCHEME "${COLORSCHEME}"
 tmux source ~/.tmux.conf
-
