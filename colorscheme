@@ -33,11 +33,11 @@ if [ "${COLORSCHEME}" = 'light' ]; then
     # sed -i -e 's/^colors:.*/colors: *papercolor/' ~/.config/alacritty/alacritty.yml
     sed -i -e 's/^colors:.*/colors: *tokyoday/' ~/.config/alacritty/alacritty.yml
     # ln -s ~/.config/k9s/solarized_light.yml ~/.config/k9s/skin.yml
-    ln -s ~/.config/k9s/tokyonight_day.yml ~/.config/k9s/skin.yml
+    cat ~/.config/k9s/tokyonight_day.yml >~/.config/k9s/skin.yml
 else
     # sed -i -e 's/^colors:.*/colors: *nord/' ~/.config/alacritty/alacritty.yml
     sed -i -e 's/^colors:.*/colors: *tokyostorm/' ~/.config/alacritty/alacritty.yml
-    ln -s ~/.config/k9s/nord.yml ~/.config/k9s/skin.yml
+    cat ~/.config/k9s/nord.yml >~/.config/k9s/skin.yml
 fi
 
 # tmate setenv -g COLORSCHEME "${COLORSCHEME}"
