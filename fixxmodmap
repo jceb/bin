@@ -38,7 +38,9 @@ touchpad || true
 naturalscrolling
 
 # assign wacom tablet to the third screen
-xsetwacom --set "HUION Huion Tablet Pen stylus" MapToOutput HDMI-1 | true
+xsetwacom --set "HUION Huion Tablet stylus" MapToOutput HDMI-1 | true
+xsetwacom --set "HUION Huion Tablet Touch Strip pad" MapToOutput HDMI-1 | true
+xsetwacom --set "HUION Huion Tablet Dial pad" MapToOutput HDMI-1 | true
 xsetwacom --set "HUION Huion Tablet Pad pad" MapToOutput HDMI-1 | true
 xsetwacom --set "Wacom One by Wacom M Pen stylus" MapToOutput HDMI-1 | true
 xsetwacom --set "Wacom One by Wacom M Pen eraser" MapToOutput HDMI-1 | true
