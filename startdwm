@@ -10,14 +10,14 @@ set +a
 
 # set environment variables for gpg and ssh agent
 if [ -z "${GPG_AGENT_INFO}" ]; then
-    export GPG_AGENT_INFO="$(gpgconf --list-dirs agent-socket)"
+	export GPG_AGENT_INFO="$(gpgconf --list-dirs agent-socket)"
 fi
 if [ -z "${SSH_AUTH_SOCK}" ]; then
-    export SSH_AUTH_SOCK="$(gpgconf --list-dirs agent-ssh-socket)"
+	export SSH_AUTH_SOCK="$(gpgconf --list-dirs agent-ssh-socket)"
 fi
 
 # start window manager and autostart programs
-xmonad --recompile
+xmonad --recompile -Wno-deprecations
 xmonad &
 
 systemctl --user start autostart.target
