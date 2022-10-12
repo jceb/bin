@@ -1,3 +1,2 @@
 #!/bin/bash
-sudo btrfs fi balance start --full-balance / -v -f
-sudo btrfs fi balance start --full-balance /home -v -f
+sudo bash -c "btrfs fi balance start --full-balance / -v -f && btrfs fi balance start --full-balance /home -v -f"
