@@ -1,4 +1,5 @@
 #!/bin/bash
+# vi: ft=sh
 
 set -e
 set -u
@@ -37,15 +38,17 @@ touchpad || true
 
 naturalscrolling
 
-# assign wacom tablet to the third screen
-# xsetwacom --set "HUION Huion Tablet stylus" MapToOutput HDMI-1 | true
-# xsetwacom --set "HUION Huion Tablet Touch Strip pad" MapToOutput HDMI-1 | true
-# xsetwacom --set "HUION Huion Tablet Dial pad" MapToOutput HDMI-1 | true
-# xsetwacom --set "HUION Huion Tablet Pad pad" MapToOutput HDMI-1 | true
-# xsetwacom --set "Wacom One by Wacom M Pen stylus" MapToOutput HDMI-1 | true
-# xsetwacom --set "Wacom One by Wacom M Pen eraser" MapToOutput HDMI-1 | true
+MONITOR="HDMI-A-0"
 
-xsetwacom --list devices | awk -F\\t '{print $2}' | awk '{print $2}' | xargs -r -t -P 8 -I {} xsetwacom --set {} MapToOutput HDMI-1 || true
+# assign wacom tablet to the third screen
+# xsetwacom --set "HUION Huion Tablet stylus" MapToOutput "$MONITOR" | true
+# xsetwacom --set "HUION Huion Tablet Touch Strip pad" MapToOutput "$MONITOR" | true
+# xsetwacom --set "HUION Huion Tablet Dial pad" MapToOutput "$MONITOR" | true
+# xsetwacom --set "HUION Huion Tablet Pad pad" MapToOutput "$MONITOR" | true
+# xsetwacom --set "Wacom One by Wacom M Pen stylus" MapToOutput "$MONITOR" | true
+# xsetwacom --set "Wacom One by Wacom M Pen eraser" MapToOutput "$MONITOR" | true
+
+xsetwacom --list devices | awk -F\\t '{print $2}' | awk '{print $2}' | xargs -r -t -P 8 -I {} xsetwacom --set {} MapToOutput "$MONITOR" || true
 
 # Rotate 180 degree:
 xsetwacom --list devices | awk -F\\t '/Wacom .*type: (STYLUS|ERASER)/ {print $2}' | awk '{print $2}' | xargs -r -t -P 8 -I {} xsetwacom --set {} Rotate none || true
