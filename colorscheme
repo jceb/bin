@@ -33,12 +33,12 @@ if [ "${COLORSCHEME}" = 'light' ]; then
 	sed -i -e 's/^colors:.*/colors: *tokyoday/' ~/.config/alacritty/alacritty.yml
 	# ln -s ~/.config/k9s/solarized_light.yml ~/.config/k9s/skin.yml # don't link, instead truncate so that changes are directly picked up by k9s
 	cat ~/.config/k9s/tokyonight_day.yml >~/.config/k9s/skin.yml
-	sed -i -e 's/^\([ \t]*\)color_config: \$[^ ]*/\1color_config: $light_theme/' ~/.config/nushell/config.nu
+	sed -i -e 's/^\([ \t]*\)color_config: \$[^ ]*/\1color_config: $light_theme/' -e 's/ one-dark / one-light /' ~/.config/nushell/config.nu
 else
 	# sed -i -e 's/^colors:.*/colors: *nord/' ~/.config/alacritty/alacritty.yml
 	sed -i -e 's/^colors:.*/colors: *tokyostorm/' ~/.config/alacritty/alacritty.yml
 	cat ~/.config/k9s/nord.yml >~/.config/k9s/skin.yml
-	sed -i -e 's/^\([ \t]*\)color_config: \$[^ ]*/\1color_config: $dark_theme/' ~/.config/nushell/config.nu
+	sed -i -e 's/^\([ \t]*\)color_config: \$[^ ]*/\1color_config: $dark_theme/' -e 's/ one-light / one-dark /' ~/.config/nushell/config.nu
 fi
 
 # tmate setenv -g COLORSCHEME "${COLORSCHEME}"
