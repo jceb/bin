@@ -1,2 +1,0 @@
-#!/bin/sh
-VIS_PATH="$HOME/.local/share/vis" VIS_THEME="papercolor" exec ~/.local/bin/vis "${@}"

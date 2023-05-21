@@ -1,2 +1,0 @@
-#!/bin/sh
-exec ipython3 notebook --profile julia

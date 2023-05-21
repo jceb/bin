@@ -1,2 +1,0 @@
-#!/bin/sh
-exec ~/bin/x-terminal-emulator -e vim --servername FIREFOX --remote-silent "$@"

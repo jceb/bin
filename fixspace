@@ -1,9 +1,0 @@
-#!/bin/sh
-# Replace white space characters in file names with an underscore
-if [ $# -eq 0 ] || [ "$1" = "-h" ] || [ "$1" = "--help" ]; then
-	echo "USAGE: $(basename "$0") FILENAME[S]"
-	echo -e "\tReplace all white space characters by underscores"
-	exit 1
-fi
-
-perl-rename 's/\s+/_/g' "$@"
