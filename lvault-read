@@ -5,6 +5,6 @@
 
 set -e
 
-current_file="$(readlink -f $0)"
+current_file="$(readlink -f "$0")"
 
 gpg -dq "$1" 2>/dev/null | paste "${current_file}.header" - | curl -s --header @- --request GET "http://127.0.0.1:8200/v1/${2:-secret/password}" | tee >(jq -r ".errors[0]?" | grep -ve '^null$' >&2) | jq -r "${3:-.data.value}" | grep -ve '^null$'
