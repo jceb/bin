@@ -12,6 +12,7 @@ set +a
 if [ -z "${GPG_AGENT_INFO}" ]; then
 	export GPG_AGENT_INFO="$(gpgconf --list-dirs agent-socket)"
 fi
+unset SSH_AGENT_PID
 if [ -z "${SSH_AUTH_SOCK}" ]; then
 	export SSH_AUTH_SOCK="$(gpgconf --list-dirs agent-ssh-socket)"
 fi
